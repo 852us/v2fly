@@ -21,7 +21,8 @@ verify_root_user() {
 }
 
 get_pkg_cmd() {
-  OS_TYPE=$(awk -F'=' '/^ID_LIKE=/{print $2}' /etc/os-release | sed 's/"//g')
+  # OS_TYPE=$(awk -F'=' '/^ID_LIKE=/{print $2}' /etc/os-release | sed 's/"//g')
+  OS_TYPE=$(awk -F'[= ."]' '/^ID_LIKE=/{print $3}' /etc/os-release)
   echo -e ${CYAN}OS_TYPE=$OS_TYPE${NOCOLOR}
   case $OS_TYPE in
   "debian"):
@@ -53,7 +54,16 @@ install_packages() {
   done
 }
 
+install_v2fly(){
+
+}
+
+install_caddy(){
+
+}
+
 verify_root_user
 get_pkg_cmd
 update_os
 install_packages
+install_v2fly
