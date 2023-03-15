@@ -2,6 +2,13 @@
 
 VERSION="0.0.1"
 
+verify_root_user() {
+  if [[ $EUID -ne 0 ]] ; then
+    echo
+    echo "必须使用root用户"
+    echo
+  fi
+}
 
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'"' '/^ID_LIKE=/{print $2}' /etc/os-release)
@@ -25,5 +32,7 @@ update_os() {
   $PKG_CMD upgrade -y
 }
 
+
+verify_root_user
 get_pkg_cmd
 update_os
