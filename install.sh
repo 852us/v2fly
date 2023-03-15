@@ -39,7 +39,7 @@ get_pkg_cmd() {
 }
 
 update_os() {
-  echo -e "${GREEN}Updating Operating System ..${NOCOLOR}"
+  echo -e "${GREEN}Updating Operating System ...${NOCOLOR}"
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
