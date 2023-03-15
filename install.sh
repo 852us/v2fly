@@ -14,7 +14,7 @@ NOCOLOR='\e[0m'
 verify_root_user() {
   if [[ $EUID -ne 0 ]] ; then
     echo
-    echo "${RED}必须使用root用户${NOCOLOR}"
+    echo -e "${RED}必须使用root用户${NOCOLOR}"
     echo
   fi
 }
@@ -23,20 +23,20 @@ get_pkg_cmd() {
   OS_TYPE=$(awk -F'"' '/^ID_LIKE=/{print $2}' /etc/os-release)
   case $OS_TYPE in
   "debian"):
-    echo Debian-like Linux, including Debian and Ubuntu Linux.
+    echo -e Debian-like Linux, including Debian and Ubuntu Linux.
     PKG_CMD="apt"
     ;;
   "fedora"):
-    echo Fedora-like Linux, including Red Hat, Centos, and Fedora Linux.
+    echo -e Fedora-like Linux, including Red Hat, Centos, and Fedora Linux.
     PKG_CMD="yum"
     ;;
   esac
-  echo Package Manament Tool: $PKG_CMD
+  echo -e Package Manament Tool: $PKG_CMD
   echo
 }
 
 update_os() {
-  echo "${CYAN}Updating Operating System ..${NOCOLOR}"
+  echo -e "${CYAN}Updating Operating System ..${NOCOLOR}"
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
