@@ -16,6 +16,7 @@ verify_root_user() {
     echo
     echo -e "${RED}必须使用root用户${NOCOLOR}"
     echo
+    exit 1
   fi
 }
 
