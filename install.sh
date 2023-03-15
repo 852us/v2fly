@@ -36,7 +36,7 @@ get_pkg_cmd() {
   esac
   echo -e Package Manament Tool: $PKG_CMD
   echo
-  export PKG_CMD
+  export PKG_CMD=${PKG_CMD:-apt}
 }
 
 update_os() {
