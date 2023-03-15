@@ -54,12 +54,12 @@ install_packages() {
   done
 }
 
-install_v2fly(){
-
+install_v2fly() {
+  :
 }
 
-install_caddy(){
-
+install_caddy() {
+  :
 }
 
 verify_root_user
