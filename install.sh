@@ -43,7 +43,7 @@ update_os() {
 }
 
 install_packages() {
-  pkgs="curl wget unzip"
+  pkgs="curl git wget unzip"
   for pkg in $pkgs; do
     echo
     echo -e "${GREEN}$PKG_CMD install $pkg -y${NOCOLOR}"
