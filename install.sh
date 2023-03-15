@@ -2,7 +2,10 @@
 
 VERSION="0.0.1"
 
-OS=$(grep "^NAME=" /etc/os-release | awk -F '[="]' "{print $2}")
-OS_VERSION=$(grep "^VERSION_ID=" /etc/os-release |  awk -F '[="]' "{print $2}")
-echo $OS
-echo $OS_VERSION
+
+pkg_cmd(){
+  if [[ -z $(which apt) ]] ; then
+    PKG_CMD="yum"
+  endif
+}
+echo $(PKG_CMD version)
