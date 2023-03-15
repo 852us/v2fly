@@ -22,6 +22,7 @@ verify_root_user() {
 
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'"' '/^ID_LIKE=/{print $2}' /etc/os-release)
+  echo -e ${CYAN}$OS_TYPE${NOCOLOR}
   case $OS_TYPE in
   "debian"):
     echo -e Debian-like Linux, including Debian and Ubuntu Linux.
@@ -34,6 +35,7 @@ get_pkg_cmd() {
   esac
   echo -e Package Manament Tool: $PKG_CMD
   echo
+  export PKG_CMD
 }
 
 update_os() {
