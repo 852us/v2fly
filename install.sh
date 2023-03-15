@@ -23,7 +23,7 @@ verify_root_user() {
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
   echo -e ${CYAN}OS_TYPE=$OS_TYPE${NOCOLOR}
-  case "$OS_TYPE" in
+  case $OS_TYPE in
   "debian"):
     echo -e Debian-like Linux, including Debian and Ubuntu Linux.
     PKG_CMD="apt"
