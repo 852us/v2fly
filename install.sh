@@ -2,10 +2,19 @@
 
 VERSION="0.0.1"
 
+
+RED='\e[91m'
+GREEN='\e[92m'
+YELLOW='\e[93m'
+BLUE='\e[94m'
+MAGENTA='\e[95m'
+CYAN='\e[96m'
+NOCOLOR='\e[0m'
+
 verify_root_user() {
   if [[ $EUID -ne 0 ]] ; then
     echo
-    echo "必须使用root用户"
+    echo "${RED}必须使用root用户${NOCOLOR}"
     echo
   fi
 }
@@ -27,7 +36,7 @@ get_pkg_cmd() {
 }
 
 update_os() {
-  echo "Updating Operating System .."
+  echo "${CYAN}Updating Operating System ..${NOCOLOR}"
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
