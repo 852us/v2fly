@@ -42,7 +42,14 @@ update_os() {
   $PKG_CMD upgrade -y
 }
 
+install_packages() {
+  pkgs="curl wget unzip"
+  for pkg in pkgs; do
+    $PKG_CMD install $pkg -y
+  done
+}
 
 verify_root_user
 get_pkg_cmd
 update_os
+install_packages
