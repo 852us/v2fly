@@ -21,7 +21,7 @@ verify_root_user() {
 }
 
 get_pkg_cmd() {
-  OS_TYPE=$(awk -F'=' '/^ID_LIKE=/{print $2}' /etc/os-release)
+  OS_TYPE=$(awk -F'=' '/^ID_LIKE=/{print $2}' /etc/os-release | sed 's/"//g')
   echo -e ${CYAN}OS_TYPE=$OS_TYPE${NOCOLOR}
   case $OS_TYPE in
   "debian"):
