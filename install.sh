@@ -55,11 +55,11 @@ install_packages() {
 }
 
 install_v2fly(){
-  ::
+
 }
 
 install_caddy(){
-  ::
+
 }
 
 verify_root_user
