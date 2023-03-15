@@ -3,7 +3,7 @@
 VERSION="0.0.1"
 
 
-pkg_cmd() {
+get_pkg_cmd() {
   OS_TYPE=$(awk -F'"' '/^ID_LIKE=/{print $2}' /etc/os-release)
   case $OS_TYPE in
   "debian"):
@@ -15,7 +15,15 @@ pkg_cmd() {
     PKG_CMD="yum"
     ;;
   esac
-  echo Package Manament Tools: $PKG_CMD
+  echo Package Manament Tool: $PKG_CMD
+  echo
 }
 
-pkg_cmd
+update_os() {
+  echo "Updating Operating System .."
+  $PKG_CMD update -y
+  $PKG_CMD upgrade -y
+}
+
+get_pkg_cmd
+update_os
