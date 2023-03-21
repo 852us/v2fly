@@ -2,7 +2,6 @@
 
 VERSION="0.0.1"
 
-
 RED='\e[91m'
 GREEN='\e[92m'
 YELLOW='\e[93m'
@@ -53,12 +52,39 @@ install_packages() {
   done
 }
 
+download_caddy() {
+  caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
+  caddy_latest_ver="$(curl -s $caddy_repos_url | grep 'tag_name' | cut -d\" -f4)" # awk -F \" '{print $4}'
+  caddy_latest_ver_num=$(echo $caddy_latest_ver | sed 's/v//')
+	caddy_tmp="/tmp/install_caddy/"
+	caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
+	caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
+	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
+
+	[[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
+	if [[ ! ${caddy_arch} ]]; then
+		echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
+	fi
+	mkdir -p $caddy_tmp
+
+	if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
+		echo -e "${red} 下载 Caddy 失败！${plain}" && exit 1
+	fi
+
+	tar zxf $caddy_tmp_file -C $caddy_tmp
+	cp -f ${caddy_tmp}caddy /usr/local/bin/
+
+	if [[ ! -f /usr/local/bin/caddy ]]; then
+		echo -e "${red} 安装 Caddy 出错！${plain}" && exit 1
+	fi
+}
+
 install_v2fly() {
   :
 }
 
 install_caddy() {
-  :
+  download_caddy
 }
 
 verify_root_user
