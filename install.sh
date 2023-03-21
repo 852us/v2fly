@@ -113,6 +113,11 @@ download_caddy() {
   fi
 }
 
+install_caddy() {
+  echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
+  download_caddy
+}
+
 get_v2flay_latest_version() {
   v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
@@ -135,11 +140,6 @@ download_v2fly() {
 
 install_v2fly() {
   download_v2fly
-}
-
-install_caddy() {
-  echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
-  download_caddy
 }
 
 verify_root_user
