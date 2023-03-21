@@ -92,3 +92,4 @@ get_pkg_cmd
 update_os
 install_packages
 install_v2fly
+install_caddy
