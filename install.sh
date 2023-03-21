@@ -49,10 +49,12 @@ get_sys_bit() {
     caddy_arch="arm64"
     ;;
   *)
+    echo
     echo -e "${RED}不支持现有的体系结构${sys_bit} ... {NOCOLOR}"
     exit 1
     ;;
   esac
+  echo
   echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
 }
 
@@ -80,7 +82,8 @@ download_caddy() {
 	caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
 	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
 
-  echo
+  caddy_current_ver=$()
+  
 	[[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
 	if [[ ! ${caddy_arch} ]]; then
 		echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
