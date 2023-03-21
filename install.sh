@@ -83,8 +83,9 @@ download_caddy() {
 	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
 
   caddy_current_ver=$(caddy version | grep ${caddy_latest_ver_num})
+  echo -e "${RED}Caddy当前安装版本：{caddy_current_ver} ... ${NOCOLOR}"
   if [[ ${caddy_current_ver} = ${caddy_latest_ver_num} ]]; then
-    echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ..."
+    echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ...${NOCOLOR}"
     exit 1
   fi
 
