@@ -90,7 +90,7 @@ download_caddy() {
     echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ...${NOCOLOR}"
     exit 1
   else
-    echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}不同，安装最新版 ...${NOCOLOR}"
+    echo -e "${GREEN}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}不同，安装最新版 ...${NOCOLOR}"
   fi
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
