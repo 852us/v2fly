@@ -95,7 +95,7 @@ download_caddy() {
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
     echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
-    exit 1
+    return
   fi
   mkdir -p $caddy_tmp
 
