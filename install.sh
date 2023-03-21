@@ -81,9 +81,7 @@ download_caddy() {
   caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
   caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
 
-  # caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
-  caddy_current_version=$(caddy version)
-  caddy_current_version=$(caddy_current_version/ .*/)
+  caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
   if [[ ${caddy_current_version} == ${caddy_latest_version} ]]; then
     echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version}相同，无需安装 ... ${NOCOLOR}"
     return
