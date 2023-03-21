@@ -1,14 +1,8 @@
 #!/bin/bash
 
 VERSION="0.0.1"
-
 RED='\e[91m'
 GREEN='\e[92m'
-YELLOW='\e[93m'
-BLUE='\e[94m'
-MAGENTA='\e[95m'
-CYAN='\e[96m'
-NOCOLOR='\e[0m'
 
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
@@ -81,8 +75,8 @@ download_caddy() {
   caddy_latest_version_number=$(echo $caddy_latest_version | sed 's/v//')
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
-  caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
-  caddy_download_link="${caddy_download_link}${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
+  caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
+  caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
 
   caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
@@ -126,7 +120,8 @@ get_v2flay_latest_version() {
 download_v2fly() {
   [[ ! $v2ray_latest_version ]] && get_v2flay_latest_version
   v2ray_tmp_file="/tmp/v2ray.zip"
-  v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/$v2ray_latest_version/v2ray-linux-${v2ray_bit}.zip"
+  v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
+  v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${v2ray_bit}.zip"
 
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
@@ -147,6 +142,7 @@ get_pkg_cmd
 update_os
 install_packages
 get_sys_bit
-install_caddy
 echo -e "${GREEN}Installing v2fly ... "
 install_v2fly
+install_caddy
+
