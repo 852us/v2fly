@@ -82,7 +82,7 @@ download_caddy() {
   caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
     echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ... ${NOCOLOR}"
-    exit 1
+    return 1
   else
     echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ... ${NOCOLOR}"
   fi
@@ -90,7 +90,7 @@ download_caddy() {
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
     echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
-    return 1
+    exit 1
   fi
   mkdir -p $caddy_tmp
 
@@ -132,7 +132,7 @@ download_v2fly() {
   else
     echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}不同，安装最新版本 ... ${NOCLOR}"
   fi
-  
+
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
     echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
@@ -153,7 +153,5 @@ get_pkg_cmd
 update_os
 install_packages
 get_sys_bit
-echo -e "${GREEN}Installing v2fly ... ${NOCOLOR}"
-install_v2fly
 install_caddy
-
+install_v2fly
