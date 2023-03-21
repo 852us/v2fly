@@ -21,7 +21,7 @@ verify_root_user() {
 
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
-  echo -e ${CYAN}OS_TYPE=$OS_TYPE${NOCOLOR}
+  echo -e ${GREEN}OS_TYPE=$OS_TYPE${NOCOLOR}
   case $OS_TYPE in
   "debian"):
     echo -e Debian-like Linux, including Debian and Ubuntu Linux.
@@ -83,7 +83,8 @@ download_caddy() {
 	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
 
   caddy_current_ver=$(caddy version | grep ${caddy_latest_ver_num})
-  echo -e "${RED}Caddy当前安装版本：{caddy_current_ver} ... ${NOCOLOR}"
+  echo -e "${GREEN}Caddy当前安装版本：{caddy_current_ver} ... ${NOCOLOR}"
+
   if [[ ${caddy_current_ver} = ${caddy_latest_ver_num} ]]; then
     echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ...${NOCOLOR}"
     exit 1
@@ -112,7 +113,6 @@ install_v2fly() {
 }
 
 install_caddy() {
-  echo
   echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
   download_caddy
 }
