@@ -94,24 +94,47 @@ download_caddy() {
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
-    echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
+    echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
+    exit 1
   fi
   mkdir -p $caddy_tmp
 
   if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
-    echo -e "${red} 下载 Caddy 失败！${plain}" && exit 1
+    echo -e "${RED} 下载 Caddy 失败！${NOCOLOR}"
+    exit 1
   fi
 
   tar zxf $caddy_tmp_file -C $caddy_tmp
   cp -f ${caddy_tmp}caddy /usr/local/bin/
 
   if [[ ! -f /usr/local/bin/caddy ]]; then
-    echo -e "${red} 安装 Caddy 出错！${plain}" && exit 1
+    echo -e "${red} 安装 Caddy 出错！${plain}"
+    exit 1
   fi
 }
 
+get_v2flay_latest_version() {
+	v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
+	v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
+}
+
+download_v2fly() {
+	[[ ! $v2ray_latest_version ]] && get_v2flay_latest_version
+	v2ray_tmp_file="/tmp/v2ray.zip"
+	v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/$v2ray_latest_version/v2ray-linux-${v2ray_bit}.zip"
+
+	if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
+	  echo
+		echo -e "${RED} 下载 V2Ray 失败..${NOCOLOR}"
+		exit 1
+	fi
+
+	unzip -o $v2ray_tmp_file -d "/usr/bin/v2fly/"
+	chmod +x /usr/bin/v2fly/v2ray
+}
+
 install_v2fly() {
-  :
+  download_v2fly
 }
 
 install_caddy() {
@@ -124,5 +147,6 @@ get_pkg_cmd
 update_os
 install_packages
 get_sys_bit
-install_v2fly
 install_caddy
+install_v2fly
+
