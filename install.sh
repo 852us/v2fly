@@ -37,6 +37,25 @@ get_pkg_cmd() {
   export PKG_CMD=${PKG_CMD:-apt}
 }
 
+get_sys_bit() {
+  sys_bit=$(uname -m)
+  case ${sys_bit} in
+  'amd64' | x86_64)
+    v2ray_bit="64"
+    caddy_arch="amd64"
+    ;;
+  *aarch64* | *armv8*)
+    v2ray_bit="arm64-v8a"
+    caddy_arch="arm64"
+    ;;
+  *)
+    echo -e "${RED}不支持现有的体系结构${sys_bit} ... {NOCOLOR}"
+    exit 1
+    ;;
+  esac
+  echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
+}
+
 update_os() {
   echo -e "${GREEN}Updating Operating System ...${NOCOLOR}"
   $PKG_CMD update -y
@@ -94,5 +113,6 @@ verify_root_user
 get_pkg_cmd
 update_os
 install_packages
+get_sys_bit
 install_v2fly
 install_caddy
