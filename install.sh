@@ -53,6 +53,8 @@ get_sys_bit() {
   esac
   echo
   echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
+  echo -e "${GREEN}caddy_arch: ${caddy_arch}${NOCOLOR}"
+  echo -e "${GREEN}v2ray_bit: ${v2ray_bit}${NOCOLOR}"
 }
 
 update_os() {
@@ -127,7 +129,7 @@ download_v2fly() {
   v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
   v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${v2ray_bit}.zip"
 
-  if [[ "${v2ray_current_version_number}" = "${v2ray_latest_version_number}" ]] ; then
+  if [[ "${v2ray_current_version_number}" == "${v2ray_latest_version_number}" ]]; then
     echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
     return 1
   else
