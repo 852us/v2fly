@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSION="0.0.1"
-RED='\e[91m'
+RED='\e[31m'
 GREEN='\e[92m'
 NOCOLOR='\e[0m'
 
