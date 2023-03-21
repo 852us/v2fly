@@ -119,11 +119,16 @@ get_v2flay_latest_version() {
 }
 
 download_v2fly() {
+  v2ray_current_version=$(/usr/bin/v2fly/v2ray version | awk -F ' ' '/V2Ray/{print $2}')
   [[ ! $v2ray_latest_version ]] && get_v2flay_latest_version
   v2ray_tmp_file="/tmp/v2ray.zip"
   v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
   v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${v2ray_bit}.zip"
 
+  if [[ "${v2ray_current_version}" = "${v2ray_latest_version}" ]] ; then
+    echo -e "${RED}V2Ray当前版本：${v2ray_current_version}，与最新版本：${v2ray_latest_version}相同，无需安装... ${NOCLOR}"
+    return 1
+  fi
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
     echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
@@ -135,6 +140,7 @@ download_v2fly() {
 }
 
 install_v2fly() {
+  echo -e "${GREEN}Installing and configuring V2Ray ... ${NOCOLOR}"
   download_v2fly
 }
 
