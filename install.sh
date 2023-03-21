@@ -86,6 +86,7 @@ install_v2fly() {
 }
 
 install_caddy() {
+  echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
   download_caddy
 }
 
