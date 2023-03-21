@@ -77,20 +77,19 @@ install_packages() {
 
 download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
-  caddy_latest_ver="$(curl -s $caddy_repos_url | grep 'tag_name' | cut -d\" -f4)" # awk -F \" '{print $4}'
-  caddy_latest_ver_num=$(echo $caddy_latest_ver | sed 's/v//')
+  caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | cut -d\" -f4)" # awk -F \" '{print $4}'
+  caddy_latest_version_number=$(echo $caddy_latest_version | sed 's/v//')
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
   caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
-  caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
+  caddy_download_link="${caddy_download_link}${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
 
-  caddy_current_ver=$(caddy version | grep ${caddy_latest_ver_num})
-
-  if [[ ${caddy_current_ver} = ${caddy_latest_ver_num} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ...${NOCOLOR}"
+  caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
+  if [[ ${caddy_current_version} = ${caddy_latest_version_number} ]]; then
+    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同 ...${NOCOLOR}"
     exit 1
   else
-    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_ver}，与最新版本：${caddy_latest_ver_num}不同，安装最新版 ...${NOCOLOR}"
+    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ...${NOCOLOR}"
   fi
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
