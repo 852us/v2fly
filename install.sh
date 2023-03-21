@@ -53,8 +53,8 @@ get_sys_bit() {
   esac
   echo
   echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
-  echo "    caddy_arch: ${caddy_arch}"
-  echo "    v2ray_bit: ${v2ray_bit}"
+  echo "  caddy_arch: ${caddy_arch}"
+  echo "  v2ray_bit: ${v2ray_bit}"
 }
 
 update_os() {
