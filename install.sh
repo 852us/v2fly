@@ -5,12 +5,16 @@ RED='\e[91m'
 GREEN='\e[92m'
 NOCOLOR='\e[0m'
 
+_exit () {
+  echo
+  exit $@
+}
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
     echo -e "${RED}必须使用root用户${NOCOLOR}"
     echo
-    exit 1
+    _exit 1
   fi
 }
 
@@ -48,7 +52,7 @@ get_sys_bit() {
   *)
     echo
     echo -e "${RED}不支持现有的体系结构${sys_bit} ... ${NOCOLOR}"
-    exit 1
+    _exit 1
     ;;
   esac
   echo
@@ -92,13 +96,13 @@ download_caddy() {
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
     echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
-    exit 1
+    _exit 1
   fi
   mkdir -p $caddy_tmp
 
   if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
     echo -e "${RED} 下载 Caddy 失败！${NOCOLOR}"
-    exit 1
+    _exit 1
   fi
 
   tar zxf $caddy_tmp_file -C $caddy_tmp
@@ -106,7 +110,7 @@ download_caddy() {
 
   if [[ ! -f /usr/local/bin/caddy ]]; then
     echo -e "${red} 安装 Caddy 出错！${NOCOLOR}"
-    exit 1
+    _exit 1
   fi
 }
 
@@ -139,7 +143,7 @@ download_v2fly() {
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
     echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
-    exit 1
+    _exit 1
   fi
 
   unzip -o $v2ray_tmp_file -d "/usr/bin/v2fly/"
