@@ -109,6 +109,7 @@ download_caddy() {
 }
 
 install_caddy() {
+  echo
   echo -e "${GREEN}Installing and configuring caddy ... ${NOCOLOR}"
   download_caddy
 }
@@ -144,6 +145,7 @@ download_v2fly() {
 }
 
 install_v2fly() {
+  echo
   echo -e "${GREEN}Installing and configuring V2Ray ... ${NOCOLOR}"
   download_v2fly
 }
