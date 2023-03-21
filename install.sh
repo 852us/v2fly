@@ -144,6 +144,7 @@ download_v2fly() {
 
   unzip -o $v2ray_tmp_file -d "/usr/bin/v2fly/"
   chmod +x /usr/bin/v2fly/v2ray
+  ln -snf /usr/bin/v2fly/v2ray /usr/bin/v2ray
 }
 
 install_v2fly() {
