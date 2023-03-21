@@ -11,7 +11,7 @@ CYAN='\e[96m'
 NOCOLOR='\e[0m'
 
 verify_root_user() {
-  if [[ $EUID -ne 0 ]] ; then
+  if [[ $EUID -ne 0 ]]; then
     echo
     echo -e "${RED}必须使用root用户${NOCOLOR}"
     echo
@@ -23,11 +23,13 @@ get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
   echo -e ${GREEN}OS_TYPE=$OS_TYPE${NOCOLOR}
   case $OS_TYPE in
-  "debian"):
+  "debian")
+    :
     echo -e Debian-like Linux, including Debian and Ubuntu Linux.
     PKG_CMD="apt"
     ;;
-  "fedora"):
+  "fedora")
+    :
     echo -e Fedora-like Linux, including Red Hat, Centos, and Fedora Linux.
     PKG_CMD="yum"
     ;;
@@ -77,35 +79,35 @@ download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
   caddy_latest_ver="$(curl -s $caddy_repos_url | grep 'tag_name' | cut -d\" -f4)" # awk -F \" '{print $4}'
   caddy_latest_ver_num=$(echo $caddy_latest_ver | sed 's/v//')
-	caddy_tmp="/tmp/install_caddy/"
-	caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
-	caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
-	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
+  caddy_tmp="/tmp/install_caddy/"
+  caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
+  caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
+  caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
 
   caddy_current_ver=$(caddy version | grep ${caddy_latest_ver_num})
   echo -e "${GREEN}Caddy当前安装版本：{caddy_current_ver} ... ${NOCOLOR}"
 
-  if [[ ${caddy_current_ver} = ${caddy_latest_ver_num} ]]; then
+  if [[ ${caddy_current_ver} == ${caddy_latest_ver_num} ]]; then
     echo -e "${RED}Caddy当前安装版本：{caddy_current_ver}，与最新版本：${caddy_latest_ver_num}相同 ...${NOCOLOR}"
     exit 1
   fi
 
-	[[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
-	if [[ ! ${caddy_arch} ]]; then
-		echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
-	fi
-	mkdir -p $caddy_tmp
+  [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
+  if [[ ! ${caddy_arch} ]]; then
+    echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
+  fi
+  mkdir -p $caddy_tmp
 
-	if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
-		echo -e "${red} 下载 Caddy 失败！${plain}" && exit 1
-	fi
+  if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
+    echo -e "${red} 下载 Caddy 失败！${plain}" && exit 1
+  fi
 
-	tar zxf $caddy_tmp_file -C $caddy_tmp
-	cp -f ${caddy_tmp}caddy /usr/local/bin/
+  tar zxf $caddy_tmp_file -C $caddy_tmp
+  cp -f ${caddy_tmp}caddy /usr/local/bin/
 
-	if [[ ! -f /usr/local/bin/caddy ]]; then
-		echo -e "${red} 安装 Caddy 出错！${plain}" && exit 1
-	fi
+  if [[ ! -f /usr/local/bin/caddy ]]; then
+    echo -e "${red} 安装 Caddy 出错！${plain}" && exit 1
+  fi
 }
 
 install_v2fly() {
