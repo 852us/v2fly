@@ -81,8 +81,8 @@ download_caddy() {
 
   caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ... ${NOCOLOR}"
-    return 1
+    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
+    return
   else
     echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ... ${NOCOLOR}"
   fi
