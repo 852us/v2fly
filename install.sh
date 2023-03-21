@@ -79,7 +79,7 @@ install_packages() {
 download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
   caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | awk -F '"' '{print $4}')"
-  caddy_latest_version_number=${caddy_latest_version/v/}
+  caddy_latest_version_number=${caddy_latest_version/^v/}
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
   caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
@@ -123,8 +123,7 @@ install_caddy() {
 get_v2flay_latest_version() {
   v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
-  v2ray_latest_version_number=${v2ray_latest_version/v/}
-  echo -e "${GREEN}${v2ray_latest_version_number}${NOCOLOR}"
+  v2ray_latest_version_number=${v2ray_latest_version/^v/}
 }
 
 download_v2fly() {
