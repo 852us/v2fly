@@ -75,13 +75,13 @@ install_packages() {
 download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
   caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | awk -F '"' '{print $4}')"
-  caddy_latest_version_number=$(echo $caddy_latest_version | sed 's/v//')
+  caddy_latest_version_number=${caddy_latest_version/v/}
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
   caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
   caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
 
-  caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
+  caddy_current_version=$(caddy version | awk -F ' ' '/^v/{print $1}')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
     echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
     return
