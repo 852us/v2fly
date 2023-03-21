@@ -13,7 +13,7 @@ NOCOLOR='\e[0m'
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
-    echo -e "${RED}必须使用root用户${NOCOLOR}"
+    echo -e "${RED}必须使用root用户"
     echo
     exit 1
   fi
@@ -21,7 +21,7 @@ verify_root_user() {
 
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
-  echo -e ${GREEN}OS_TYPE=$OS_TYPE${NOCOLOR}
+  echo -e ${GREEN}OS_TYPE=$OS_TYPE
   case $OS_TYPE in
   "debian")
     :
@@ -57,11 +57,11 @@ get_sys_bit() {
     ;;
   esac
   echo
-  echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
+  echo -e "${GREEN}支持的体系结构：${sys_bit} ... "
 }
 
 update_os() {
-  echo -e "${GREEN}Updating Operating System ...${NOCOLOR}"
+  echo -e "${GREEN}Updating Operating System ..."
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
@@ -70,14 +70,14 @@ install_packages() {
   pkgs="curl git wget unzip"
   for pkg in $pkgs; do
     echo
-    echo -e "${GREEN}$PKG_CMD install $pkg -y${NOCOLOR}"
+    echo -e "${GREEN}$PKG_CMD install $pkg -y"
     $PKG_CMD install $pkg -y
   done
 }
 
 download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
-  caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | cut -d\" -f4)" # awk -F \" '{print $4}'
+  caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | awk -F '"' '{print $4}')"
   caddy_latest_version_number=$(echo $caddy_latest_version | sed 's/v//')
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
@@ -86,21 +86,21 @@ download_caddy() {
 
   caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ...${NOCOLOR}"
+    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ..."
     exit 1
   else
-    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ...${NOCOLOR}"
+    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ..."
   fi
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
-    echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
+    echo -e "${RED} 获取 Caddy 下载参数失败！"
     return 1
   fi
   mkdir -p $caddy_tmp
 
   if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
-    echo -e "${RED} 下载 Caddy 失败！${NOCOLOR}"
+    echo -e "${RED} 下载 Caddy 失败！"
     exit 1
   fi
 
@@ -114,7 +114,7 @@ download_caddy() {
 }
 
 install_caddy() {
-  echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
+  echo -e "${GREEN}Installing and configuring caddy ..."
   download_caddy
 }
 
@@ -130,7 +130,7 @@ download_v2fly() {
 
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
-    echo -e "${RED} 下载 V2Ray 失败..${NOCOLOR}"
+    echo -e "${RED} 下载 V2Ray 失败.."
     exit 1
   fi
 
@@ -148,5 +148,5 @@ update_os
 install_packages
 get_sys_bit
 install_caddy
-echo -e "${GREEN}Installing v2fly ... ${NOCOLOR}"
+echo -e "${GREEN}Installing v2fly ... "
 install_v2fly
