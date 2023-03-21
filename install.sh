@@ -148,4 +148,5 @@ update_os
 install_packages
 get_sys_bit
 install_caddy
+echo -e "${GREEN}Installing v2fly ... ${NOCOLOR}"
 install_v2fly
