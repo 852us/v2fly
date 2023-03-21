@@ -123,7 +123,7 @@ get_v2flay_latest_version() {
 }
 
 download_v2fly() {
-  v2ray_current_version_number=$(/usr/bin/v2fly/v2ray version | awk -F ' ' '/V2Ray/{print $2}')
+  v2ray_current_version_number=$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')
   [[ ! $v2ray_latest_version ]] && get_v2flay_latest_version
   v2ray_tmp_file="/tmp/v2ray.zip"
   v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
@@ -144,7 +144,7 @@ download_v2fly() {
 
   unzip -o $v2ray_tmp_file -d "/usr/bin/v2fly/"
   chmod +x /usr/bin/v2fly/v2ray
-  ln -snf /usr/bin/v2fly/v2ray /usr/bin/v2ray
+  cp /usr/bin/v2fly/v2ray /usr/bin/v2ray
 }
 
 install_v2fly() {
