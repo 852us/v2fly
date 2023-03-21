@@ -80,8 +80,7 @@ download_caddy() {
 	caddy_download_link="https://github.com/caddyserver/caddy/releases/download/"
 	caddy_download_link="${caddy_download_link}${caddy_latest_ver}/caddy_${caddy_latest_ver_num}_linux_${caddy_arch}.tar.gz"
 
-  echo ${caddy_download_link}
-
+  echo
 	[[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
 	if [[ ! ${caddy_arch} ]]; then
 		echo -e "${red} 获取 Caddy 下载参数失败！${plain}" && exit 1
@@ -105,6 +104,7 @@ install_v2fly() {
 }
 
 install_caddy() {
+  echo
   echo -e "${GREEN}Installing and configuring caddy ...${NOCOLOR}"
   download_caddy
 }
