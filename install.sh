@@ -3,11 +3,12 @@
 VERSION="0.0.1"
 RED='\e[91m'
 GREEN='\e[92m'
+NOCOLOR='\e[0m'
 
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
-    echo -e "${RED}必须使用root用户"
+    echo -e "${RED}必须使用root用户${NOCOLOR}"
     echo
     exit 1
   fi
@@ -19,12 +20,12 @@ get_pkg_cmd() {
   case $OS_TYPE in
   "debian")
     :
-    echo -e Debian-like Linux, including Debian and Ubuntu Linux.
+    echo "Debian-like Linux, including Debian and Ubuntu Linux."
     PKG_CMD="apt"
     ;;
   "fedora")
     :
-    echo -e Fedora-like Linux, including Red Hat, Centos, and Fedora Linux.
+    echo "Fedora-like Linux, including Red Hat, Centos, and Fedora Linux."
     PKG_CMD="yum"
     ;;
   esac
@@ -46,16 +47,16 @@ get_sys_bit() {
     ;;
   *)
     echo
-    echo -e "${RED}不支持现有的体系结构${sys_bit} ... {NOCOLOR}"
+    echo -e "${RED}不支持现有的体系结构${sys_bit} ... ${NOCOLOR}"
     exit 1
     ;;
   esac
   echo
-  echo -e "${GREEN}支持的体系结构：${sys_bit} ... "
+  echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
 }
 
 update_os() {
-  echo -e "${GREEN}Updating Operating System ..."
+  echo -e "${GREEN}Updating Operating System ... ${NOCOLOR}"
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
@@ -64,7 +65,7 @@ install_packages() {
   pkgs="curl git wget unzip"
   for pkg in $pkgs; do
     echo
-    echo -e "${GREEN}$PKG_CMD install $pkg -y"
+    echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
     $PKG_CMD install $pkg -y
   done
 }
@@ -80,21 +81,21 @@ download_caddy() {
 
   caddy_current_version=$(caddy version | sed 's/^v//' | sed 's/ .*//')
   if [[ ${caddy_current_version} == ${caddy_latest_version_number} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ..."
+    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}相同，不需要安装 ... ${NOCOLOR}"
     exit 1
   else
-    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ..."
+    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version_number}不同，安装最新版 ... ${NOCOLOR}"
   fi
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${caddy_arch} ]]; then
-    echo -e "${RED} 获取 Caddy 下载参数失败！"
+    echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
     return 1
   fi
   mkdir -p $caddy_tmp
 
   if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
-    echo -e "${RED} 下载 Caddy 失败！"
+    echo -e "${RED} 下载 Caddy 失败！${NOCOLOR}"
     exit 1
   fi
 
@@ -102,13 +103,13 @@ download_caddy() {
   cp -f ${caddy_tmp}caddy /usr/local/bin/
 
   if [[ ! -f /usr/local/bin/caddy ]]; then
-    echo -e "${red} 安装 Caddy 出错！${plain}"
+    echo -e "${red} 安装 Caddy 出错！${NOCOLOR}"
     exit 1
   fi
 }
 
 install_caddy() {
-  echo -e "${GREEN}Installing and configuring caddy ..."
+  echo -e "${GREEN}Installing and configuring caddy ... ${NOCOLOR}"
   download_caddy
 }
 
@@ -125,7 +126,7 @@ download_v2fly() {
 
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
-    echo -e "${RED} 下载 V2Ray 失败.."
+    echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
     exit 1
   fi
 
@@ -142,7 +143,7 @@ get_pkg_cmd
 update_os
 install_packages
 get_sys_bit
-echo -e "${GREEN}Installing v2fly ... "
+echo -e "${GREEN}Installing v2fly ... ${NOCOLOR}"
 install_v2fly
 install_caddy
 
