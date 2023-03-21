@@ -124,6 +124,7 @@ get_v2flay_latest_version() {
   v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
   v2ray_latest_version_number=${v2ray_latest_version/v/}
+  echo -e "${GREEN}${v2ray_latest_version_number}${NOCOLOR}"
 }
 
 download_v2fly() {
