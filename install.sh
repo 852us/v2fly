@@ -127,9 +127,12 @@ download_v2fly() {
   v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${v2ray_bit}.zip"
 
   if [[ "${v2ray_current_version_number}" = "${v2ray_latest_version_number}" ]] ; then
-    echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装... ${NOCLOR}"
+    echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装 ... ${NOCLOR}"
     return 1
+  else
+    echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}不同，安装最新版本 ... ${NOCLOR}"
   fi
+  
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
     echo
     echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
