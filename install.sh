@@ -140,27 +140,27 @@ install_v2fly() {
   echo
   echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
 
-  v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
-  v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
-  v2ray_latest_version_number=${v2ray_latest_version/v/}
-  v2ray_current_version_number=$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')
+  V2RAY_URL="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
+  V2RAY_LATEST_VERSION=$(curl -s ${V2RAY_URL} | grep 'tag_name' | awk -F \" '{print $4}')
+  V2RAY_LATEST_VERSION_NUMBER=${V2RAY_LATEST_VERSION/v/}
+  V2RAY_CURRENT_VERSION_NUMBER=$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')
 
-  v2ray_tmp_file="/tmp/v2ray.zip"
-  v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
-  v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${V2RAY_BIT}.zip"
+  V2RAY_TEMP_FILE="/tmp/v2ray.zip"
+  V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
+  V2RAY_DOWNLOAD_URL="${V2RAY_DOWNLOAD_URL}/${V2RAY_LATEST_VERSION}/v2ray-linux-${V2RAY_BIT}.zip"
 
-  if [[ "${v2ray_current_version_number}" == "${v2ray_latest_version_number}" ]]; then
-    echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
+  if [[ "${V2RAY_CURRENT_VERSION_NUMBER}" == "${V2RAY_LATEST_VERSION_NUMBER}" ]]; then
+    echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
 
-  if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
+  if ! wget --no-check-certificate -O "$V2RAY_TEMP_FILE" $V2RAY_DOWNLOAD_URL; then
     echo
     echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
     _exit 1
   fi
 
-  unzip -o $v2ray_tmp_file -d ${V2FLY_PATH}
+  unzip -o $V2RAY_TEMP_FILE -d ${V2FLY_PATH}
   chmod +x ${V2FLY_PATH}/v2ray
   cp ${V2FLY_PATH}/v2ray ${V2RAY}
 }
