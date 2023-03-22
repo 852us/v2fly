@@ -131,12 +131,13 @@ install_caddy() {
 
 uninstall_caddy() {
   echo
-  echo -e "${RED}正在卸载Caddy ... ${NOCOLOR}"
-
-  [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
-  [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
-  [[ -f ${CADDY} ]] && rm -f ${CADDY}
-  echo -e "${RED}完成Caddy卸载 ${NOCOLOR}"
+  if [[ ! -f ${CADDY} ]] ; then
+    echo -e "${RED}未安装Caddy${NOCOLOR}"
+  else
+    echo -e "${RED}正在卸载Caddy ... ${NOCOLOR}"
+    rm -f ${CADDY}
+    echo -e "${RED}完成Caddy卸载 ${NOCOLOR}"
+  fi
 }
 
 install_v2ray() {
@@ -171,22 +172,24 @@ install_v2ray() {
 
 uninstall_v2ray() {
   echo
-  echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
-
-  [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
-  [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
-  echo -e "${RED}完成V2Ray卸载 ${NOCOLOR}"
+  if [[ ! -f ${V2RAY} ]] ; then
+    echo -e "${RED}未安装V2Ray${NOCOLOR}"
+  else
+    echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
+    rm -f ${V2RAY}
+    [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
+    echo -e "${RED}完成V2Ray卸载 ${NOCOLOR}"
+  fi
 }
 
 show_menu() {
   while :; do
-    echo
     echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
-    echo -e "${GREEN} 1. 安装Caddy与V2ray${NOCOLOR}"
+    echo -e "${GREEN} 1. 安装Caddy与V2Ray${NOCOLOR}"
     echo
-    echo -e "${GREEN} 2. 全新安装：更新操作系统、安装Caddy与V2ray ${NOCOLOR}"
+    echo -e "${GREEN} 2. 全新安装：更新操作系统、安装Caddy与V2Ray ${NOCOLOR}"
     echo
-    echo -e "${GREEN} 3. 卸载Caddy与V2ray ${NOCOLOR}"
+    echo -e "${GREEN} 3. 卸载Caddy与V2Ray ${NOCOLOR}"
     echo
 
     read -p "$(echo -e "${GREEN}请选择[1-3]: ${NOCOLOR}")" choose
