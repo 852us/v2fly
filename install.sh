@@ -526,8 +526,10 @@ show_menu() {
     echo
     green " 4. 重启Caddy与V2Ray服务"
     echo
+    green " 5. 查看配置信息"
+    echo
 
-    read -p "$(echo 请选择[1-4]:)" choose
+    read -p "$(echo 请选择[1-5]:)" choose
     case $choose in
     1)
       prepare_system
@@ -545,6 +547,9 @@ show_menu() {
     4)
       restart_services
       break
+      ;;
+    5)
+      show_info
       ;;
     *)
       error
