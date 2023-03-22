@@ -485,7 +485,7 @@ show_menu() {
     green " 4. 重启Caddy与V2Ray服务"
     echo
 
-    read -p "$(echo 请选择[1-3]:)" choose
+    read -p "$(echo 请选择[1-4]:)" choose
     case $choose in
     1)
       prepare_system
