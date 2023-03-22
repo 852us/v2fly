@@ -5,6 +5,12 @@ RED='\e[91m'
 GREEN='\e[92m'
 NOCOLOR='\e[0m'
 
+PKG_CMD=""
+SYS_BIT=""
+V2RAY_BIT=""
+CADDY_ARCH=""
+PACKAGES="curl git wget unzip"
+
 _exit () {
   echo
   exit $@
@@ -38,27 +44,27 @@ get_pkg_cmd() {
   export PKG_CMD=${PKG_CMD:-apt}
 }
 
-get_sys_bit() {
-  sys_bit=$(uname -m)
-  case ${sys_bit} in
+get_SYS_BIT() {
+  SYS_BIT=$(uname -m)
+  case ${SYS_BIT} in
   'amd64' | x86_64)
-    v2ray_bit="64"
-    caddy_arch="amd64"
+    V2RAY_BIT="64"
+    CADDY_ARCH="amd64"
     ;;
   *aarch64* | *armv8*)
-    v2ray_bit="arm64-v8a"
-    caddy_arch="arm64"
+    V2RAY_BIT="arm64-v8a"
+    CADDY_ARCH="arm64"
     ;;
   *)
     echo
-    echo -e "${RED}不支持现有的体系结构${sys_bit} ... ${NOCOLOR}"
+    echo -e "${RED}不支持现有的体系结构${SYS_BIT} ... ${NOCOLOR}"
     _exit 1
     ;;
   esac
   echo
-  echo -e "${GREEN}支持的体系结构：${sys_bit} ... ${NOCOLOR}"
-  echo "  caddy_arch: ${caddy_arch}"
-  echo "  v2ray_bit: ${v2ray_bit}"
+  echo -e "${GREEN}支持的体系结构：${SYS_BIT} ... ${NOCOLOR}"
+  echo "  CADDY_ARCH: ${CADDY_ARCH}"
+  echo "  V2RAY_BIT: ${V2RAY_BIT}"
 }
 
 update_os() {
@@ -68,8 +74,7 @@ update_os() {
 }
 
 install_packages() {
-  pkgs="curl git wget unzip"
-  for pkg in $pkgs; do
+  for pkg in $PACKAGES; do
     echo
     echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
     $PKG_CMD install $pkg -y
@@ -83,7 +88,7 @@ download_caddy() {
   caddy_tmp="/tmp/install_caddy/"
   caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
   caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
-  caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${caddy_arch}.tar.gz"
+  caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${CADDY_ARCH}.tar.gz"
 
   caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
   if [[ ${caddy_current_version} == ${caddy_latest_version} ]]; then
@@ -94,7 +99,7 @@ download_caddy() {
   fi
 
   [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
-  if [[ ! ${caddy_arch} ]]; then
+  if [[ ! ${CADDY_ARCH} ]]; then
     echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
     _exit 1
   fi
@@ -120,18 +125,15 @@ install_caddy() {
   download_caddy
 }
 
-get_v2flay_latest_version() {
+download_v2fly() {
   v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
   v2ray_latest_version_number=${v2ray_latest_version/v/}
-}
-
-download_v2fly() {
   v2ray_current_version_number=$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')
-  [[ ! $v2ray_latest_version ]] && get_v2flay_latest_version
+
   v2ray_tmp_file="/tmp/v2ray.zip"
   v2ray_download_link="https://github.com/v2fly/v2ray-core/releases/download/"
-  v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${v2ray_bit}.zip"
+  v2ray_download_link="${v2ray_download_link}/${v2ray_latest_version}/v2ray-linux-${V2RAY_BIT}.zip"
 
   if [[ "${v2ray_current_version_number}" == "${v2ray_latest_version_number}" ]]; then
     echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
@@ -146,9 +148,10 @@ download_v2fly() {
     _exit 1
   fi
 
-  unzip -o $v2ray_tmp_file -d "/usr/bin/v2fly/"
-  chmod +x /usr/bin/v2fly/v2ray
-  cp /usr/bin/v2fly/v2ray /usr/bin/v2ray
+  v2fly_path="/usr/bin/v2fly"
+  unzip -o $v2ray_tmp_file -d ${v2fly_path}
+  chmod +x ${v2fly_path}/v2ray
+  cp ${v2fly_path}/v2ray /usr/bin/v2ray
 }
 
 install_v2fly() {
@@ -161,7 +164,7 @@ verify_root_user
 get_pkg_cmd
 update_os
 install_packages
-get_sys_bit
+get_SYS_BIT
 install_caddy
 install_v2fly
 echo
