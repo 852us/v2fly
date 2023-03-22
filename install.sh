@@ -30,6 +30,7 @@ V2RAY_PORT="12345"
 PROTOCOL="vmess"
 TRANSPORT="ws" # WebSocket
 UUID=$(uuidgen -r)
+VMESS_FILE="${V2RAY_CONFIG_PATH}/vmess.json"
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
 _exit() {
@@ -485,7 +486,7 @@ uninstall() {
 }
 
 make_vmess(){
-  cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
+  cat >${VMESS_FILE} <<-EOF
 {
   "v": "2",
   "ps": "${DOMAIN}",
@@ -502,19 +503,36 @@ make_vmess(){
 EOF
 }
 
+get_info_from_vmess() {
+  VMESS_PS=$(awk -F '"' '/"ps"/{print $4}' ${VMESS_FILE})
+  VMESS_ADD=$(awk -F '"' '/"add"/{print $4}' ${VMESS_FILE})
+  VMESS_PORT=$(awk -F '"' '/"port"/{print $4}' ${VMESS_FILE})
+  VMESS_ID=$(awk -F '"' '/"id"/{print $4}' ${VMESS_FILE})
+  VMESS_AID=$(awk -F '"' '/"aid"/{print $4}' ${VMESS_FILE})
+  VMESS_NET=$(awk -F '"' '/"net"/{print $4}' ${VMESS_FILE})
+  VMESS_HOST=$(awk -F '"' '/"host"/{print $4}' ${VMESS_FILE})
+  VMESS_PATH=$(awk -F '"' '/"path"/{print $4}' ${VMESS_FILE})
+  VMESS_TLS=$(awk -F '"' '/"tls"/{print $4}' ${VMESS_FILE})
+}
+
 show_info() {
   if [[ ! -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
   else
+    get_info_from_vmess
+    VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${DOMAIN}:${VMESS_PORT}"
+    VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
+    VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
+
     echo
     echo "-------------------- 配置信息 --------------------"
-    cat ${V2RAY_CONFIG_PATH}/vmess.json
+    cat ${VMESS_FILE}
     echo
     echo "-------------------- V2Ray vmess URL Base 64 --------------------"
-    cyan "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
+    cyan ${VMESS_URL_BASE64}
     echo
     echo "-------------------- V2Ray vmess URL Text --------------------"
-    green "vmess://${TRANSPORT}+tls:${UUID}-0@${DOMAIN}:443/?host=${DOMAIN}&path=${FLOW_PATH}&tlsServerName=${DOMAIN}#${DOMAIN}"
+    green ${VMESS_URL_TEXT}
     echo
   fi
 }
