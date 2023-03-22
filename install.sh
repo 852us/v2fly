@@ -216,7 +216,6 @@ config_domain() {
     DOMAIN_IP=$(dig ${DOMAIN} | grep "^${DOMAIN}" | awk '{print $5}')
     if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
       red "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名未正确解析到当前主机 ... "
-      error
       continue
     else
       green "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名已正确解析到当前主机 ... "
