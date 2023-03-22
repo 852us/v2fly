@@ -509,7 +509,7 @@ show_info() {
 show_url(){
   echo
   echo "-------------------- V2Ray vmess URL --------------------"
-  echo "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
+  green "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
   echo
 }
 
