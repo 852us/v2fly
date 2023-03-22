@@ -107,8 +107,6 @@ install_caddy() {
   if [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
     echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
-  else
-    echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}不同，需要更新 ... ${NOCOLOR}"
   fi
 
   if [[ ! ${CADDY_ARCH} ]]; then
