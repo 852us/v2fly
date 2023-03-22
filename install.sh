@@ -260,6 +260,8 @@ config() {
 }
 
 install_caddy_service() {
+  echo
+  green "Caddy服务安装进行中 ..."
   cat >${CADDY_SERVICE_FILE} <<-EOF
 # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
 # CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
