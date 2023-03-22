@@ -147,6 +147,7 @@ install_v2fly() {
 
   V2RAY_URL="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   V2RAY_LATEST_VERSION=$(curl -s ${V2RAY_URL} | grep 'tag_name' | awk -F \" '{print $4}')
+  V2RAY_LATEST_VERSION_NUMBER=${V2RAY_LATEST_VERSION/v/}
 
   V2RAY_TEMP_FILE="/tmp/v2ray.zip"
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
