@@ -343,7 +343,7 @@ uninstall() {
 show_menu() {
   while :; do
     echo
-    echo "V2ray一键安装脚本：${VERSION} "
+    red "V2ray一键安装脚本：${VERSION} "
     echo
     green " 1. 全新安装：更新操作系统、安装Caddy与V2Ray "
     echo
