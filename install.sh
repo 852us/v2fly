@@ -188,6 +188,23 @@ uninstall_v2ray() {
   fi
 }
 
+config_caddy() {
+  # DOMAIN="jp5.gocoin.one"
+  # FLOW_PATH="/api"
+  echo "
+$DOMAIN {
+  reverse_proxy https://www.gnu.org {
+      header_up Host {upstream_hostport}
+      header_up X-Forwarded-Host {host}
+  }
+  handle_path $FLOW_PATH {
+      reverse_proxy 127.0.0.1:36704
+  }
+}
+" > /etc/CaddyFile
+}
+import sites/*
+}
 show_menu() {
   while :; do
     echo
