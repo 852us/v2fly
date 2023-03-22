@@ -83,11 +83,9 @@ update_os() {
 }
 
 install_packages() {
-  for pkg in $PACKAGES; do
-    echo
-    echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
-    $PKG_CMD install $pkg -y
-  done
+  echo
+  echo -e "${GREEN}$PKG_CMD install -y ${PACKAGES} ${NOCOLOR}"
+  $PKG_CMD install -y ${PACKAGES}
 }
 
 install_caddy() {
