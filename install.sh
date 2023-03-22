@@ -3,6 +3,7 @@
 VERSION="0.0.1"
 RED='\e[91m'
 GREEN='\e[92m'
+CYAN='\e[96m'
 NOCOLOR='\e[0m'
 
 PKG_CMD=""
@@ -46,6 +47,10 @@ green() {
 
 red() {
   echo -e "${RED}$@ ${NOCOLOR}"
+}
+
+cyan() {
+  echo -e "${CYAN}$@ ${NOCOLOR}"
 }
 
 verify_root_user() {
@@ -502,10 +507,10 @@ show_info() {
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
   else
     echo
-    green "-------------------- 配置信息 --------------------"
-    cat ${V2RAY_CONFIG_PATH}/vmess.json
+    cyan "-------------------- 配置信息 --------------------"
+    green $(cat ${V2RAY_CONFIG_PATH}/vmess.json)
     echo
-    echo "-------------------- V2Ray vmess URL --------------------"
+    cyan "-------------------- V2Ray vmess URL --------------------"
     green "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
     echo
   fi
@@ -548,6 +553,7 @@ show_menu() {
       ;;
     5)
       show_info
+      break
       ;;
     *)
       error
