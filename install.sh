@@ -477,7 +477,7 @@ uninstall() {
   show_service_status
 }
 
-show_url(){
+show_info(){
   cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
 {
   "ps": "${DOMAIN}",
@@ -566,6 +566,9 @@ main() {
   I | install_all)
     prepare_system
     install
+    ;;
+  info)
+    show_info
     ;;
   m | menu)
     show_menu
