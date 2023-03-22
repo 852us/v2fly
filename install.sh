@@ -219,12 +219,12 @@ show_menu() {
       ;;
     esac
   done
+  echo
 }
 
 main() {
   verify_root_user
   show_menu
-  echo
 }
 
 main
