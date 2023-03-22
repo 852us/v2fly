@@ -291,6 +291,7 @@ EOF
   fi
   systemctl enable caddy
   systemctl restart caddy
+  green "Caddy服务安装已完成 ..."
 }
 
 check_services_status() {
