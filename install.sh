@@ -188,6 +188,24 @@ install_v2ray() {
   [[ -f ${V2RAY_TEMP_FILE} ]] && rm -f ${V2RAY_TEMP_FILE}
 }
 
+rm_files() {
+  for f in $@; do
+    if [[ -f $f ]]; then
+      echo rm -f $f
+      rm -f $f
+    fi
+  done
+}
+
+rm_dirs() {
+  for d in $@; do
+    if [[ -d $d ]]; then
+      echo rm -rf $d
+      rm -rf $d
+    fi
+  done
+}
+
 uninstall_caddy() {
   echo
   if [[ ! -f ${CADDY} ]]; then
@@ -195,9 +213,8 @@ uninstall_caddy() {
   else
     systemctl stop caddy
     systemctl disable caddy
-    [[ -f ${CADDY_SERVICE_FILE} ]] && rm -f ${CADDY_SERVICE_FILE}
-    [[ -f ${CADDY} ]] && rm -f ${CADDY}
-    [[ -d ${CADDY_CONFIG_PATH} ]] && rm -rf ${CADDY_CONFIG_PATH}
+    rm_files "${CADDY}" "${CADDY_SERVICE_FILE}"
+    rm_dirs "${CADDY_CONFIG_PATH}"
     red "已卸载Caddy "
   fi
 }
@@ -209,10 +226,8 @@ uninstall_v2ray() {
   else
     systemctl stop v2ray
     systemctl disable v2ray
-    [[ -f ${V2RAY_SERVICE_FILE} ]] && rm -f ${V2RAY_SERVICE_FILE}
-    [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
-    [[ -d ${V2RAY_CONFIG_PATH} ]] && rm -rf ${V2RAY_CONFIG_PATH}
-    [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
+    rm_files ${V2RAY} ${V2RAY_SERVICE_FILE}
+    rm_dirs ${V2FLY_PATH} ${V2RAY_CONFIG_PATH} ${V2RAY_LOG_PATH}
     red "已卸载V2Ray "
   fi
 }
