@@ -217,7 +217,7 @@ config_caddy() {
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
-    reverse_proxy "https://www.gnu.org/" {
+    reverse_proxy https://www.gnu.org/ {
         header_up Host {upstream_hostport}
         header_up X-Forwarded-Host {host}
     }
