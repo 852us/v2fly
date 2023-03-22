@@ -227,7 +227,7 @@ config_caddy() {
     mkdir -p ${CADDY_CONFIG_PATH}/sites
   fi
 
-  cat >${CADDY_CONFIG_FILE} <<EOF
+  cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
     reverse_proxy ${MASK_DOMAIN} {
         header_up Host {upstream_hostport}
@@ -238,11 +238,11 @@ ${DOMAIN} {
     }
 }
 import sites/*
-  EOF
+EOF
 }
 
 install_caddy_service() {
-  cat >${CADDY_SERVICE_FILE} <<EOF
+  cat >${CADDY_SERVICE_FILE} <<-EOF
 # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
 # CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
 [Unit]
@@ -265,7 +265,7 @@ ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target
-  EOF
+EOF
 
   check_services_status
   if [ ${CADDY_PID} ] ; then
