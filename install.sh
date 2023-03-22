@@ -491,7 +491,7 @@ show_url(){
       "path": "${FLOW_PATH}",
       "tls": "tls"
     }
-  EOF
+EOF
   cat ${V2RAY_CONFIG_PATH}/vmess.json
 }
 
