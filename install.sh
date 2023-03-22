@@ -102,10 +102,13 @@ install_caddy() {
   CADDY_DOWNLOAD_URL="https://github.com/caddyserver/caddy/releases/download"
   CADDY_DOWNLOAD_URL="${CADDY_DOWNLOAD_URL}/${CADDY_LATEST_VERSION}/caddy_${CADDY_LATEST_VERSION_NUMBER}_linux_${CADDY_ARCH}.tar.gz"
 
-  CADDY_CURRENT_VERSION="$(caddy version | awk -F ' ' '{print $1}')"
-  if [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
+  if [[ ! -f ${CADDY} ]] ; then
+    :
+  elif [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
     echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
+  else
+    echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}不同，需要更新 ... ${NOCOLOR}"
   fi
 
   if [[ ! ${CADDY_ARCH} ]]; then
@@ -153,9 +156,13 @@ install_v2fly() {
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
   V2RAY_DOWNLOAD_URL="${V2RAY_DOWNLOAD_URL}/${V2RAY_LATEST_VERSION}/v2ray-linux-${V2RAY_BIT}.zip"
 
-  if [[ "${V2RAY_CURRENT_VERSION_NUMBER}" = "${V2RAY_LATEST_VERSION_NUMBER}" ]]; then
+  if [[ ! -f ${V2RAY} ]] ; then
+    :
+  elif [[ ${V2RAY_CURRENT_VERSION_NUMBER} = ${V2RAY_LATEST_VERSION_NUMBER} ]]; then
     echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
     return 1
+  else
+    echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}不同，需要更新 ... ${NOCOLOR}"
   fi
 
   if ! wget --no-check-certificate -O "$V2RAY_TEMP_FILE" $V2RAY_DOWNLOAD_URL; then
