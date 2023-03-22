@@ -209,7 +209,10 @@ config_domain() {
     echo
     red "请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
-    [ -z "${DOMAIN}" ] && error && continue
+    if [ -z "${DOMAIN}" ] ; then
+      red "未输入有效的域名"
+      continue
+    fi
 
     echo
     green "输入的域名：${DOMAIN} "
