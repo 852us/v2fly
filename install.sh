@@ -503,6 +503,14 @@ show_info() {
   else
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
   fi
+  show_url
+}
+
+show_url(){
+  echo
+  echo "-------------------- V2Ray vmess URL --------------------"
+  echo "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
+  echo
 }
 
 show_menu() {
