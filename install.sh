@@ -29,7 +29,7 @@ _exit() {
 }
 
 error() {
-  echo -e "${RED}错误选择，请输入正确的选项 ... ${NOCOLOR}"
+  echo -e "${RED}输入错误，请重新输入正确的内容 ... ${NOCOLOR}"
 }
 
 verify_root_user() {
