@@ -27,6 +27,7 @@ MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 PROTOCOL="vmess"
+TRANSPORT="ws" # WebSocket
 UUID=$(uuidgen -r)
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
@@ -477,7 +478,21 @@ uninstall() {
 }
 
 show_url(){
-  :
+  cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
+    {
+      "ps": "${DOMAIN}",
+      "add": "${DOMAIN}",
+      "port": "443",
+      "id": "${UUID}",
+      "aid": "0",
+      "net": "${TRANSPORT}",
+      "type": "none",
+      "host": "${DOMAIN}",
+      "path": "${FLOW_PATH}",
+      "tls": "tls"
+    }
+  EOF
+  cat ${V2RAY_CONFIG_PATH}/vmess.json
 }
 
 show_menu() {
@@ -527,6 +542,8 @@ show_help() {
   $0 i | install: 安装 V2Ray与Caddy
 
   $0 I | install_all: 更新操作系统、安装必要模块、安装 V2Ray与Caddy
+
+  $0 info: 显示客户端连接信息
 
   $0 m | menu: 管理 V2Ray (同等于直接输入 $0)
 
