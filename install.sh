@@ -16,7 +16,7 @@ CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
 CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
 
-DOMAIN="jp5.gocoin.one"
+DOMAIN="852us.com"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 
@@ -194,7 +194,21 @@ uninstall_v2ray() {
   fi
 }
 
+config_domain() {
+  while :; do
+		echo
+		echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
+		read -p "(例如：${DOMAIN}): " DOMAIN
+		[ -z "${DOMAIN}" ] && error && continue
+		echo
+		echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
+		break
+	done
+}
+
 config_caddy() {
+  config_domain
+
   [[ ! -d ${CADDY_CONFIG_PATH}/sites ]] && mkdir -p ${CADDY_CONFIG_PATH}/sites
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
