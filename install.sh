@@ -209,8 +209,12 @@ config_domain() {
 config_caddy() {
   config_domain
 
-  [[ ! -d ${CADDY_CONFIG_PATH}/sites ]] && mkdir -p ${CADDY_CONFIG_PATH}/sites
-
+  if [[ -d ${CADDY_CONFIG_PATH}/sites ]] ; then
+    rm -rf ${CADDY_CONFIG_PATH}/sites
+  else
+    mkdir -p ${CADDY_CONFIG_PATH}/sites
+  fi
+  
   cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
     reverse_proxy "https://www.gnu.org/" {
