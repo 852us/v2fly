@@ -103,7 +103,7 @@ install_caddy() {
 
   [[ -f ${CADDY} ]] && CADDY_CURRENT_VERSION=$(caddy version | awk -F' ' '{print $1}')
   if [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
+    echo -e "${RED}Caddy当前版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
 
