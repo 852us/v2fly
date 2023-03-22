@@ -497,14 +497,14 @@ main() {
   i | install)
     install
     ;;
-  ia | install_all)
+  I | install_all)
     prepare_system
     install
     ;;
   status)
     show_service_status
     ;;
-  un | uninstall)
+  u | uninstall)
     uninstall
     ;;
   *)
