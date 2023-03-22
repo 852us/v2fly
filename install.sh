@@ -302,7 +302,7 @@ config_v2ray() {
       "protocol": "blackhole",
       "settings": {},
       "tag": "blocked"
-        }
+    }
   ]
 }
 EOF
