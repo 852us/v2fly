@@ -132,7 +132,7 @@ install_caddy() {
 uninstall_caddy() {
   echo
   if [[ ! -f ${CADDY} ]] ; then
-    echo -e "${RED}未安装Caddy${NOCOLOR}"
+    echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
   else
     echo -e "${RED}正在卸载Caddy ... ${NOCOLOR}"
     rm -f ${CADDY}
@@ -173,7 +173,7 @@ install_v2ray() {
 uninstall_v2ray() {
   echo
   if [[ ! -f ${V2RAY} ]] ; then
-    echo -e "${RED}未安装V2Ray${NOCOLOR}"
+    echo -e "${RED}未安装V2Ray，无需卸载 ... ${NOCOLOR}"
   else
     echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
     rm -f ${V2RAY}
@@ -185,6 +185,7 @@ uninstall_v2ray() {
 show_menu() {
   while :; do
     echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
+    echo
     echo -e "${GREEN} 1. 安装Caddy与V2Ray${NOCOLOR}"
     echo
     echo -e "${GREEN} 2. 全新安装：更新操作系统、安装Caddy与V2Ray ${NOCOLOR}"
