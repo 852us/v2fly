@@ -259,7 +259,7 @@ config_v2ray() {
     rm -rf ${V2RAY_CONFIG_PATH}
   fi
   mkdir -p ${V2RAY_CONFIG_PATH}
-  mkdir -p ${V2RAY_LOG_PATH}
+
   cat >${V2RAY_CONFIG_FILE} <<-EOF
 {
   "log": {
@@ -356,6 +356,10 @@ EOF
 install_v2ray_service() {
   echo
   green "V2Ray服务安装进行中 ..."
+  if [[ -d ${V2RAY_LOG_PATH} ]] ; then
+    rm -rf ${V2RAY_LOG_PATH}
+  fi
+  mkdir -p ${V2RAY_LOG_PATH}
   cat >${V2RAY_SERVICE_FILE} <<-EOF
 [Unit]
 Description=V2Ray Service
@@ -376,6 +380,14 @@ LimitNPROC=512
 [Install]
 WantedBy=multi-user.target
 EOF
+
+  check_services_status
+  if [ ${V2RAY_PID} ]; then
+    systemctl daemon-reload
+  fi
+  systemctl enable v2ray
+  systemctl restart v2ray
+
   green "V2Ray服务安装已完成 ..."
 }
 
