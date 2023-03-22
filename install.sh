@@ -227,13 +227,10 @@ ${DOMAIN} {
     }
 }
 import sites/*
-EOF
+  EOF
 }
 
 install_caddy_service() {
-  systemctl stop caddy
-  systemctl disable caddy
-
   cat >${CADDY_SERVICE_FILE} <<-EOF
 # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
 # CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
@@ -257,14 +254,19 @@ ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target
-EOF
+  EOF
 
+  check_services_status
+  if [ ${CADDY_PID} ] ; then
+    systemctl daemon-reload caddy
+  fi
   systemctl enable caddy
-  systemctl start caddy
-  systemctl status caddy
+  systemctl restart caddy
+
 }
 
 check_services_status() {
+  sleep 2s
   V2RAY_PID=$(pgrep -f ${V2RAY})
   CADDY_PID=$(pgrep -f ${CADDY})
 
@@ -278,6 +280,10 @@ check_services_status() {
   else
     CADDY_STATUS="${RED}未在运行${NOCOLOR}"
   fi
+}
+
+show_service_status() {
+  check_services_status
   echo
   echo -e " V2Ray 状态: $V2RAY_STATUS  /  Caddy 状态: $CADDY_STATUS"
   echo
@@ -307,7 +313,7 @@ show_menu() {
       config_caddy
       install_caddy_service
       install_v2ray
-      check_services_status
+      show_service_status
       break
       ;;
     2)
@@ -316,7 +322,7 @@ show_menu() {
       config_caddy
       install_caddy_service
       install_v2ray
-      check_services_status
+      show_service_status
       break
       ;;
     3)
