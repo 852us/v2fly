@@ -444,6 +444,11 @@ show_service_status() {
   echo
 }
 
+restart_services() {
+  systemctl restart caddy v2ray
+  show_service_status
+}
+
 prepare_system() {
   get_pkg_cmd
   update_os
@@ -477,6 +482,8 @@ show_menu() {
     echo
     green " 3. 卸载Caddy与V2Ray "
     echo
+    green " 4. 重启Caddy与V2Ray服务"
+    echo
 
     read -p "$(echo 请选择[1-3]:)" choose
     case $choose in
@@ -491,6 +498,10 @@ show_menu() {
       ;;
     3)
       uninstall
+      break
+      ;;
+    4)
+      restart_services
       break
       ;;
     *)
