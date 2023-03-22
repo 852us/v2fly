@@ -480,10 +480,9 @@ show_menu() {
 
 main() {
   verify_root_user
-
   args=$1
+  red "Command Line: $0 $args"
   [ -z $1 ] && args="menu"
-  echo Command Line: $0 $args
   case $args in
   m | menu)
     show_menu
@@ -500,4 +499,4 @@ main() {
   esac
 }
 
-main
+main $@
