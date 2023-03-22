@@ -244,7 +244,7 @@ ${DOMAIN} {
 }
 import sites/*
 EOF
-
+  green "Caddy已正确配置 ... "
 }
 
 config_v2ray() {
