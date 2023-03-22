@@ -194,7 +194,7 @@ uninstall_caddy() {
     red "未安装Caddy，无需卸载 ... "
   else
     systemctl stop caddy
-    systemctl disable v2ray
+    systemctl disable caddy
     [[ -f ${CADDY_SERVICE_FILE} ]] && rm -f ${CADDY_SERVICE_FILE}
     [[ -f ${CADDY} ]] && rm -f ${CADDY}
     [[ -d ${CADDY_CONFIG_PATH} ]] && rm -rf ${CADDY_CONFIG_PATH}
