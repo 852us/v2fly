@@ -187,9 +187,9 @@ show_menu() {
     echo
     echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
     echo
-    echo -e "${GREEN} 2. 全新安装：更新操作系统、安装Caddy与V2Ray ${NOCOLOR}"
+    echo -e "${GREEN} 1. 全新安装：更新操作系统、安装Caddy与V2Ray ${NOCOLOR}"
     echo
-    echo -e "${GREEN} 1. 安装Caddy与V2Ray${NOCOLOR}"
+    echo -e "${GREEN} 2. 安装Caddy与V2Ray${NOCOLOR}"
     echo
     echo -e "${GREEN} 3. 卸载Caddy与V2Ray ${NOCOLOR}"
     echo
