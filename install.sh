@@ -163,7 +163,7 @@ uninstall_v2fly() {
   echo
   echo -e "${RED}卸载V2Ray ... ${NOCOLOR}"
 
-  [[ -f ${V2RAY}]] && rm -f ${V2RAY}
+  [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
   [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
   echo -e "${RED}卸载V2Ray完成 ${NOCOLOR}"
 }
