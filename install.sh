@@ -21,6 +21,7 @@ DOMAIN="852us.com"
 MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
+LOCAL_IP=$(curl -s "https://ifconfig.me")
 
 _exit() {
   echo
@@ -202,9 +203,18 @@ config_domain() {
     echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
     read -p "(例如：${DOMAIN}): " DOMAIN
     [ -z "${DOMAIN}" ] && error && continue
+
     echo
     echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
-    break
+    DOMAIN_IP=$(dig ${DOMAIN} | awk '/^${DOMAIN}/{print $5}')
+    if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
+      echo
+      echo -e "${RED} ${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入域名米有解析到当前主机 ... ${NOCOLOR}"
+      error
+      continue
+    else
+      break
+    fi
   done
 }
 
