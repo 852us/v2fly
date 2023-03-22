@@ -241,6 +241,16 @@ import sites/*
 EOF
 }
 
+config_v2ray() {
+  :
+}
+
+config() {
+  config_domain
+  config_caddy
+  config_v2ray
+}
+
 install_caddy_service() {
   cat >${CADDY_SERVICE_FILE} <<-EOF
 # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
@@ -320,18 +330,18 @@ show_menu() {
       install_packages
       set_timezone
       install_caddy
-      config_caddy
-      install_caddy_service
       install_v2ray
+      install_caddy_service
+      config
       show_service_status
       break
       ;;
     2)
       get_SYS_BIT
       install_caddy
-      config_caddy
-      install_caddy_service
       install_v2ray
+      install_caddy_service
+      config
       show_service_status
       break
       ;;
