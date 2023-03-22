@@ -441,6 +441,7 @@ install() {
 uninstall() {
   uninstall_caddy
   uninstall_v2ray
+  show_service_status
 }
 
 show_menu() {
