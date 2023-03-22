@@ -483,6 +483,7 @@ main() {
 
   args=$1
   [ -z $1 ] && args="menu"
+  echo $0 $args
   case $args in
   m | menu)
     show_menu
