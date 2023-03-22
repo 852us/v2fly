@@ -508,7 +508,7 @@ show_info() {
   else
     echo
     echo "-------------------- 配置信息 --------------------"
-    cyan $(cat ${V2RAY_CONFIG_PATH}/vmess.json)
+    echo $(cat ${V2RAY_CONFIG_PATH}/vmess.json)
     echo
     echo "-------------------- V2Ray vmess URL --------------------"
     cyan "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
