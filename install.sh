@@ -520,7 +520,7 @@ show_info() {
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
   else
     get_info_from_vmess
-    VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${DOMAIN}:${VMESS_PORT}"
+    VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${VMESS_HOST}:${VMESS_PORT}"
     VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
     VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
 
