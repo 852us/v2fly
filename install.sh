@@ -30,13 +30,25 @@ _exit() {
 }
 
 error() {
-  echo -e "${RED}输入错误，请重新输入正确的内容 ... ${NOCOLOR}"
+  red "输入错误，请重新输入正确的内容 ..."
+}
+
+green() {
+  echo -e "${GREEN}$@ ${NOCOLOR}"
+}
+
+red() {
+  echo -e "${RED}$@ ${NOCOLOR}"
+}
+
+plain() {
+  echo -e "${NOCOLOR}$@ "
 }
 
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
-    echo -e "${RED}必须使用root用户${NOCOLOR}"
+    red "必须使用root用户"
     echo
     _exit 1
   fi
@@ -55,19 +67,19 @@ get_SYS_BIT() {
     ;;
   *)
     echo
-    echo -e "${RED}不支持现有的体系结构${SYS_BIT} ... ${NOCOLOR}"
+    red "不支持现有的体系结构${SYS_BIT} ... "
     _exit 1
     ;;
   esac
   echo
-  echo -e "${GREEN}支持的体系结构：${SYS_BIT} ... ${NOCOLOR}"
+  green "支持的体系结构：${SYS_BIT} ... "
   echo "  CADDY_ARCH: ${CADDY_ARCH}"
   echo "  V2RAY_BIT: ${V2RAY_BIT}"
 }
 
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
-  echo -e "${GREEN}OS_TYPE=$OS_TYPE ${NOCOLOR}"
+  green "OS_TYPE=$OS_TYPE "
   case $OS_TYPE in
   "debian")
     :
@@ -86,14 +98,14 @@ get_pkg_cmd() {
 }
 
 update_os() {
-  echo -e "${GREEN}Updating Operating System ... ${NOCOLOR}"
+  green "Updating Operating System ... "
   $PKG_CMD update -y
   $PKG_CMD upgrade -y
 }
 
 install_packages() {
   echo
-  echo -e "${GREEN}$PKG_CMD install -y ${PACKAGES} ${NOCOLOR}"
+  green "$PKG_CMD install -y ${PACKAGES} "
   $PKG_CMD install -y ${PACKAGES}
 }
 
@@ -101,13 +113,13 @@ set_timezone() {
   echo
   timedatectl set-timezone Asia/Shanghai
   timedatectl set-ntp true
-  echo -e "${GREEN}已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。${NOCOLOR}"
+  green "已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。"
   echo
 }
 
 install_caddy() {
   echo
-  echo -e "${GREEN}安装Caddy ... ${NOCOLOR}"
+  green "安装Caddy ... "
 
   CADDY_URL="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
   CADDY_LATEST_VERSION="$(curl -s $CADDY_URL | grep 'tag_name' | awk -F '"' '{print $4}')"
@@ -120,19 +132,19 @@ install_caddy() {
 
   [[ -f ${CADDY} ]] && CADDY_CURRENT_VERSION=$(caddy version | awk -F' ' '{print $1}')
   if [[ ${CADDY_CURRENT_VERSION} == ${CADDY_LATEST_VERSION} ]]; then
-    echo -e "${RED}Caddy当前版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
+    red "Caddy当前版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... "
     return 1
   fi
 
   if [[ ! ${CADDY_ARCH} ]]; then
-    echo -e "${RED}获取 Caddy 下载参数失败！${NOCOLOR}"
+    red "获取 Caddy 下载参数失败！"
     _exit 1
   fi
   [[ -d ${CADDY_TEMP_PATH} ]] && rm -rf ${CADDY_TEMP_PATH}
   mkdir -p ${CADDY_TEMP_PATH}
 
   if ! wget --no-check-certificate -O "$CADDY_TEMP_FILE" $CADDY_DOWNLOAD_URL; then
-    echo -e "${RED}下载 Caddy 失败！${NOCOLOR}"
+    red "下载 Caddy 失败！"
     _exit 1
   fi
 
@@ -141,14 +153,14 @@ install_caddy() {
   [[ -d ${CADDY_TEMP_PATH} ]] && rm -rf ${CADDY_TEMP_PATH}
 
   if [[ ! -f ${CADDY} ]]; then
-    echo -e "${RED}安装 Caddy 出错！${NOCOLOR}"
+    red "安装 Caddy 出错！"
     _exit 1
   fi
 }
 
 install_v2ray() {
   echo
-  echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
+  green "安装V2Ray ... "
 
   V2RAY_URL="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   V2RAY_LATEST_VERSION=$(curl -s ${V2RAY_URL} | grep 'tag_name' | awk -F \" '{print $4}')
@@ -160,13 +172,13 @@ install_v2ray() {
 
   [[ -f ${V2RAY} ]] && V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
   if [[ ${V2RAY_CURRENT_VERSION_NUMBER} == ${V2RAY_LATEST_VERSION_NUMBER} ]]; then
-    echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
+    red "V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... "
     return 1
   fi
 
   if ! wget --no-check-certificate -O "$V2RAY_TEMP_FILE" $V2RAY_DOWNLOAD_URL; then
     echo
-    echo -e "${RED}下载 V2Ray 失败 ... ${NOCOLOR}"
+    red "下载 V2Ray 失败 ... "
     _exit 1
   fi
 
@@ -179,41 +191,41 @@ install_v2ray() {
 uninstall_caddy() {
   echo
   if [[ ! -f ${CADDY} ]]; then
-    echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
+    red "未安装Caddy，无需卸载 ... "
   else
     rm -f ${CADDY}
     [[ -d ${CADDY_CONFIG_PATH} ]] && rm -rf ${CADDY_CONFIG_PATH}
-    echo -e "${RED}已卸载Caddy ${NOCOLOR}"
+    red "已卸载Caddy "
   fi
 }
 
 uninstall_v2ray() {
   echo
   if [[ ! -f ${V2RAY} ]]; then
-    echo -e "${RED}未安装V2Ray，无需卸载 ... ${NOCOLOR}"
+    red "未安装V2Ray，无需卸载 ... "
   else
     rm -f ${V2RAY}
     [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
-    echo -e "${RED}已卸载V2Ray ${NOCOLOR}"
+    red "已卸载V2Ray "
   fi
 }
 
 config_domain() {
   while :; do
     echo
-    echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
+    red "请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
     [ -z "${DOMAIN}" ] && error && continue
 
     echo
-    echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
+    green "输入的域名：${DOMAIN} "
     DOMAIN_IP=$(dig ${DOMAIN} | grep "^${DOMAIN}" | awk '{print $5}')
     if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
-      echo -e "${RED}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名未正确解析到当前主机 ... ${NOCOLOR}"
+      red "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名未正确解析到当前主机 ... "
       error
       continue
     else
-      echo -e "${GREEN}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名已正确解析到当前主机 ... ${NOCOLOR}"
+      green "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名已正确解析到当前主机 ... "
       break
     fi
   done
@@ -238,6 +250,7 @@ ${DOMAIN} {
 }
 import sites/*
 EOF
+
 }
 
 config_v2ray() {
@@ -290,14 +303,14 @@ check_services_status() {
   CADDY_PID=$(pgrep -f ${CADDY})
 
   if [ ${V2RAY_PID} ]; then
-    V2RAY_STATUS="${GREEN}正在运行${NOCOLOR}"
+    V2RAY_STATUS="${GREEN}正在运行"
   else
-    V2RAY_STATUS="${RED}未在运行${NOCOLOR}"
+    V2RAY_STATUS="${RED}未在运行"
   fi
   if [ ${CADDY_PID} ]; then
-    CADDY_STATUS="${GREEN}正在运行${NOCOLOR}"
+    CADDY_STATUS="${GREEN}正在运行"
   else
-    CADDY_STATUS="${RED}未在运行${NOCOLOR}"
+    CADDY_STATUS="${RED}未在运行"
   fi
 }
 
@@ -332,16 +345,16 @@ uninstall() {
 show_menu() {
   while :; do
     echo
-    echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
+    green "V2ray一键安装脚本：${VERSION} "
     echo
-    echo -e "${GREEN} 1. 全新安装：更新操作系统、安装Caddy与V2Ray ${NOCOLOR}"
+    green " 1. 全新安装：更新操作系统、安装Caddy与V2Ray "
     echo
-    echo -e "${GREEN} 2. 安装Caddy与V2Ray${NOCOLOR}"
+    green " 2. 安装Caddy与V2Ray"
     echo
-    echo -e "${GREEN} 3. 卸载Caddy与V2Ray ${NOCOLOR}"
+    green " 3. 卸载Caddy与V2Ray "
     echo
 
-    read -p "$(echo -e "${GREEN}请选择[1-3]: ${NOCOLOR}")" choose
+    read -p "$(green "请选择[1-3]: ")" choose
     case $choose in
     1)
       prepare_system
