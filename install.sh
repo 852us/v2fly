@@ -18,6 +18,7 @@ CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
 CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
 
 DOMAIN="852us.com"
+MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 
@@ -217,7 +218,7 @@ config_caddy() {
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
-    reverse_proxy https://www.gnu.org/ {
+    reverse_proxy ${MASK_DOMAIN} {
         header_up Host {upstream_hostport}
         header_up X-Forwarded-Host {host}
     }
@@ -230,6 +231,9 @@ EOF
 }
 
 install_caddy_service() {
+  systemctl stop caddy
+  systemctl disable caddy
+
   cat >${CADDY_SERVICE_FILE} <<-EOF
 # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
 # CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
@@ -254,6 +258,10 @@ ProtectSystem=full
 [Install]
 WantedBy=multi-user.target
 EOF
+
+  systemctl enable caddy
+  systemctl start caddy
+  systemctl status caddy 
 }
 
 show_menu() {
