@@ -88,6 +88,14 @@ install_packages() {
   $PKG_CMD install -y ${PACKAGES}
 }
 
+set_timezone() {
+	echo
+	timedatectl set-timezone Asia/Shanghai
+	timedatectl set-ntp true
+	echo -e "${GREEN}已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。${NOCOLOR}"
+	echo
+}
+
 install_caddy() {
   echo
   echo -e "${GREEN}安装Caddy ... ${NOCOLOR}"
@@ -201,12 +209,14 @@ show_menu() {
       install_packages
       install_caddy
       install_v2ray
+      set_timezone
       break
       ;;
     2)
       get_SYS_BIT
       install_caddy
       install_v2ray
+      set_timezone
       break
       ;;
     3)
