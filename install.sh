@@ -510,8 +510,11 @@ show_info() {
     echo "-------------------- 配置信息 --------------------"
     cat ${V2RAY_CONFIG_PATH}/vmess.json
     echo
-    echo "-------------------- V2Ray vmess URL --------------------"
+    echo "-------------------- V2Ray vmess URL Base 64 --------------------"
     cyan "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
+    echo
+    echo "-------------------- V2Ray vmess URL Text --------------------"
+    green "vmess://${TRANSPORT}+tls:${UUID}-0@${DOMAIN}:443/?host=${DOMAIN}&path=${FLOW_PATH}&tlsServerName=${DOMAIN}#${DOMAIN}"
     echo
   fi
 }
