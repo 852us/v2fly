@@ -99,7 +99,7 @@ install_caddy() {
   CADDY_DOWNLOAD_URL="${CADDY_DOWNLOAD_URL}/${CADDY_LATEST_VERSION}/caddy_${CADDY_LATEST_VERSION_NUMBER}_linux_${CADDY_ARCH}.tar.gz"
 
   caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
-  if [[ ${caddy_current_version} == ${CADDY_LATEST_VERSION} ]]; then
+  if [[ ${caddy_current_version} = ${CADDY_LATEST_VERSION} ]]; then
     echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
@@ -149,7 +149,7 @@ install_v2fly() {
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
   V2RAY_DOWNLOAD_URL="${V2RAY_DOWNLOAD_URL}/${V2RAY_LATEST_VERSION}/v2ray-linux-${V2RAY_BIT}.zip"
 
-  if [[ "${V2RAY_CURRENT_VERSION_NUMBER}" == "${V2RAY_LATEST_VERSION_NUMBER}" ]]; then
+  if [[ "${V2RAY_CURRENT_VERSION_NUMBER}" = "${V2RAY_LATEST_VERSION_NUMBER}" ]]; then
     echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
