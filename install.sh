@@ -352,7 +352,7 @@ show_menu() {
     green " 3. 卸载Caddy与V2Ray "
     echo
 
-    read -p "$(green "请选择[1-3]: ")" choose
+    read -p "$(echo 请选择[1-3]: )" choose
     case $choose in
     1)
       prepare_system
