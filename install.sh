@@ -10,6 +10,10 @@ SYS_BIT=""
 V2RAY_BIT=""
 CADDY_ARCH=""
 PACKAGES="curl git wget unzip"
+V2FLY_PATH="/usr/bin/v2fly"
+V2RAY="/usr/bin/v2ray"
+CADDY="/usr/local/bin/caddy"
+
 
 _exit () {
   echo
@@ -86,39 +90,40 @@ install_caddy() {
   echo
   echo -e "${GREEN}安装Caddy ... ${NOCOLOR}"
 
-  caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
-  caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | awk -F '"' '{print $4}')"
-  caddy_latest_version_number=${caddy_latest_version/v/}
-  caddy_tmp="/tmp/install_caddy/"
-  caddy_tmp_file="/tmp/install_caddy/caddy.tar.gz"
-  caddy_download_link="https://github.com/caddyserver/caddy/releases/download"
-  caddy_download_link="${caddy_download_link}/${caddy_latest_version}/caddy_${caddy_latest_version_number}_linux_${CADDY_ARCH}.tar.gz"
+  CADDY_URL="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
+  CADDY_LATEST_VERSION="$(curl -s $CADDY_URL | grep 'tag_name' | awk -F '"' '{print $4}')"
+  CADDY_LATEST_VERSION_NUMBER=${CADDY_LATEST_VERSION/v/}
+  CADDY_TEMP_PATH="/tmp/install_caddy"
+  CADDY_TEMP_FILE="${CADDY_TEMP_PATH}/caddy.tar.gz"
+  CADDY_DOWNLOAD_URL="https://github.com/caddyserver/caddy/releases/download"
+  CADDY_DOWNLOAD_URL="${CADDY_DOWNLOAD_URL}/${CADDY_LATEST_VERSION}/caddy_${CADDY_LATEST_VERSION_NUMBER}_linux_${CADDY_ARCH}.tar.gz"
 
   caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
-  if [[ ${caddy_current_version} == ${caddy_latest_version} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version}相同，无需安装 ... ${NOCOLOR}"
+  if [[ ${caddy_current_version} == ${CADDY_LATEST_VERSION} ]]; then
+    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return
   else
-    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${caddy_latest_version}不同，安装最新版 ... ${NOCOLOR}"
+    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}不同，安装最新版 ... ${NOCOLOR}"
   fi
 
-  [[ -d $caddy_tmp ]] && rm -rf $caddy_tmp
   if [[ ! ${CADDY_ARCH} ]]; then
-    echo -e "${RED} 获取 Caddy 下载参数失败！${NOCOLOR}"
+    echo -e "${RED}获取 Caddy 下载参数失败！${NOCOLOR}"
     _exit 1
   fi
-  mkdir -p $caddy_tmp
+  [[ -d ${CADDY_TEMP_PATH} ]] && rm -rf ${CADDY_TEMP_PATH}
+  mkdir -p ${CADDY_TEMP_PATH}
 
-  if ! wget --no-check-certificate -O "$caddy_tmp_file" $caddy_download_link; then
-    echo -e "${RED} 下载 Caddy 失败！${NOCOLOR}"
+  if ! wget --no-check-certificate -O "$CADDY_TEMP_FILE" $CADDY_DOWNLOAD_URL; then
+    echo -e "${RED}下载 Caddy 失败！${NOCOLOR}"
     _exit 1
   fi
 
-  tar zxf $caddy_tmp_file -C $caddy_tmp
-  cp -f ${caddy_tmp}caddy /usr/local/bin/
+  tar zxf ${CADDY_TEMP_FILE} -C ${CADDY_TEMP_PATH}
+  cp -f ${CADDY_TEMP_PATH}/caddy ${CADDY}
+  [[ -d ${CADDY_TEMP_PATH} ]] && rm -rf ${CADDY_TEMP_PATH}
 
-  if [[ ! -f /usr/local/bin/caddy ]]; then
-    echo -e "${red} 安装 Caddy 出错！${NOCOLOR}"
+  if [[ ! -f ${CADDY} ]]; then
+    echo -e "${RED}安装 Caddy 出错！${NOCOLOR}"
     _exit 1
   fi
 }
@@ -149,10 +154,18 @@ install_v2fly() {
     _exit 1
   fi
 
-  v2fly_path="/usr/bin/v2fly"
-  unzip -o $v2ray_tmp_file -d ${v2fly_path}
-  chmod +x ${v2fly_path}/v2ray
-  cp ${v2fly_path}/v2ray /usr/bin/v2ray
+  unzip -o $v2ray_tmp_file -d ${V2FLY_PATH}
+  chmod +x ${V2FLY_PATH}/v2ray
+  cp ${V2FLY_PATH}/v2ray ${V2RAY}
+}
+
+uninstall_v2fly() {
+  echo
+  echo -e "${RED}卸载V2Ray ... ${NOCOLOR}"
+
+  [[ -f ${V2RAY}]] && rm -f ${V2RAY}
+  [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
+  echo -e "${RED}卸载V2Ray完成 ${NOCOLOR}"
 }
 
 main() {
@@ -163,6 +176,7 @@ main() {
   get_SYS_BIT
   install_caddy
   install_v2fly
+  uninstall_v2fly
   echo
 }
 
