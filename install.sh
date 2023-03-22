@@ -507,10 +507,10 @@ show_info() {
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
   else
     echo
-    cyan "-------------------- 配置信息 --------------------"
+    echo "-------------------- 配置信息 --------------------"
     cyan $(cat ${V2RAY_CONFIG_PATH}/vmess.json)
     echo
-    cyan "-------------------- V2Ray vmess URL --------------------"
+    echo "-------------------- V2Ray vmess URL --------------------"
     cyan "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
     echo
   fi
