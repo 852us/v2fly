@@ -445,6 +445,7 @@ show_service_status() {
 }
 
 restart_services() {
+  echo
   red "停止Caddy与V2Ray服务"
   systemctl stop caddy v2ray
   show_service_status
