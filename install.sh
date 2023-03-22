@@ -299,14 +299,14 @@ check_services_status() {
   CADDY_PID=$(pgrep -f ${CADDY})
 
   if [ ${V2RAY_PID} ]; then
-    V2RAY_STATUS="${GREEN}正在运行"
+    V2RAY_STATUS="${GREEN}正在运行${NOCOLOR}"
   else
-    V2RAY_STATUS="${RED}未在运行"
+    V2RAY_STATUS="${RED}未运行${NOCOLOR}"
   fi
   if [ ${CADDY_PID} ]; then
-    CADDY_STATUS="${GREEN}正在运行"
+    CADDY_STATUS="${GREEN}正在运行${NOCOLOR}"
   else
-    CADDY_STATUS="${RED}未在运行"
+    CADDY_STATUS="${RED}未运行${NOCOLOR}"
   fi
 }
 
