@@ -351,6 +351,11 @@ EOF
   green "V2Ray服务安装已完成 ..."
 }
 
+install_services() {
+  install_caddy_service
+  install_v2ray_service
+}
+
 check_services_status() {
   sleep 2s
   V2RAY_PID=$(pgrep -f ${V2RAY})
@@ -389,7 +394,7 @@ install() {
   install_caddy
   install_v2ray
   config
-  install_caddy_service
+  install_services
   show_service_status
 }
 
