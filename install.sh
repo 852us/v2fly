@@ -147,19 +147,15 @@ install_v2fly() {
 
   V2RAY_URL="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   V2RAY_LATEST_VERSION=$(curl -s ${V2RAY_URL} | grep 'tag_name' | awk -F \" '{print $4}')
-  V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
-  V2RAY_LATEST_VERSION_NUMBER=""
 
   V2RAY_TEMP_FILE="/tmp/v2ray.zip"
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
   V2RAY_DOWNLOAD_URL="${V2RAY_DOWNLOAD_URL}/${V2RAY_LATEST_VERSION}/v2ray-linux-${V2RAY_BIT}.zip"
 
-  [[ -f ${V2RAY} ]] && V2RAY_LATEST_VERSION_NUMBER=${V2RAY_LATEST_VERSION/v/}
+  [[ -f ${V2RAY} ]] &&   V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
   if [[ ${V2RAY_CURRENT_VERSION_NUMBER} = ${V2RAY_LATEST_VERSION_NUMBER} ]]; then
     echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
     return 1
-  else
-    echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}不同，需要更新 ... ${NOCOLOR}"
   fi
 
   if ! wget --no-check-certificate -O "$V2RAY_TEMP_FILE" $V2RAY_DOWNLOAD_URL; then
