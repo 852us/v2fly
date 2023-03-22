@@ -208,10 +208,11 @@ config_domain() {
     echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
     DOMAIN_IP=$(dig ${DOMAIN} | grep "^${DOMAIN}" | awk '{print $5}')
     if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
-      echo -e "${RED}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入域名米有解析到当前主机 ... ${NOCOLOR}"
+      echo -e "${RED}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入域名没有正确解析到当前主机 ... ${NOCOLOR}"
       error
       continue
     else
+      echo -e "${GREEN}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名已正确解析到当前主机 ... ${NOCOLOR}"
       break
     fi
   done
