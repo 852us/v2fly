@@ -16,6 +16,7 @@ CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
 CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
 CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
+V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
 
 MAGIC_URL="852us.com"
 DOMAIN="852us.com"
@@ -294,6 +295,60 @@ EOF
   systemctl enable caddy
   systemctl restart caddy
   green "Caddy服务安装已完成 ..."
+}
+
+install_v2ray_service() {
+  echo
+  green "V2Ray服务安装进行中 ..."
+  cat >${V2RAY_SERVICE_FILE} <<-EOF
+  {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 36704,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "32cc3d2e-cec8-4c6a-8d36-abbbbd599277",
+            "level": 1,
+            "alterId": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+        }
+  ]
+}
+EOF
+  green "V2Ray服务安装已完成 ..."
 }
 
 check_services_status() {
