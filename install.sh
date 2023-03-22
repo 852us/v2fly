@@ -485,9 +485,9 @@ show_menu() {
     echo
     red "V2ray一键安装脚本：${VERSION} "
     echo
-    green " 1. 全新安装：更新操作系统、安装Caddy与V2Ray "
+    green " 1. 全新安装：更新操作系统、安装 V2Ray与Caddy "
     echo
-    green " 2. 安装Caddy与V2Ray"
+    green " 2. 安装 V2Ray与Caddy"
     echo
     green " 3. 卸载Caddy与V2Ray "
     echo
@@ -521,6 +521,17 @@ show_menu() {
   echo
 }
 
+show_help() {
+  echo "V2Ray一键安装脚本 ...
+  $0 i | install: 安装 V2Ray与Caddy
+  $0 I | install_all: 更新操作系统、安装必要模块、安装 V2Ray与Caddy
+	$0 m | menu: 管理 V2Ray (同等于直接输入 $0)
+	$0 r | restart: 重启 V2Ray与Caddy服务
+	$0 u | uninstall: 卸载 V2Ray
+	$0 h | help: 显示本帮助信息
+  "
+}
+
 main() {
   verify_root_user
   args=$1
@@ -548,8 +559,8 @@ main() {
   url)
     show_url
     ;;
-  *)
-    show_menu
+  h | help | *)
+    show_help $0
     ;;
   esac
 }
