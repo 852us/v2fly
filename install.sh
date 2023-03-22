@@ -186,18 +186,6 @@ uninstall_v2fly() {
   echo -e "${RED}完成V2Ray卸载 ${NOCOLOR}"
 }
 
-main() {
-  verify_root_user
-  get_SYS_BIT
-  show_menu
-  get_pkg_cmd
-  update_os
-  install_packages
-  install_caddy
-  install_v2fly
-  echo
-}
-
 show_menu() {
   while :; do
     echo
@@ -210,6 +198,10 @@ show_menu() {
     read -p "$(echo -e "${GREEN}请选择[1-2]: ${NOCOLOR}")" choose
     case $choose in
     1)
+      get_SYS_BIT
+      get_pkg_cmd
+      update_os
+      install_packages
       install_caddy
       install_v2fly
       break
@@ -224,6 +216,12 @@ show_menu() {
       ;;
     esac
   done
+}
+
+main() {
+  verify_root_user
+  show_menu
+  echo
 }
 
 main
