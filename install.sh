@@ -15,7 +15,7 @@ V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
 CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
-CADDY_SERVICE_FILE=""
+CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
 
 DOMAIN="852us.com"
 FLOW_PATH="api"
