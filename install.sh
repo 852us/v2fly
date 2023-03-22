@@ -101,9 +101,7 @@ install_caddy() {
   caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
   if [[ ${caddy_current_version} == ${CADDY_LATEST_VERSION} ]]; then
     echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
-    return
-  else
-    echo -e "${GREEN}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}不同，安装最新版 ... ${NOCOLOR}"
+    return 1
   fi
 
   if [[ ! ${CADDY_ARCH} ]]; then
@@ -154,8 +152,6 @@ install_v2fly() {
   if [[ "${v2ray_current_version_number}" == "${v2ray_latest_version_number}" ]]; then
     echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}相同，无需安装 ... ${NOCOLOR}"
     return 1
-  else
-    echo -e "${RED}V2Ray当前版本：${v2ray_current_version_number}，与最新版本：${v2ray_latest_version_number}不同，安装最新版本 ... ${NOCOLOR}"
   fi
 
   if ! wget --no-check-certificate -O "$v2ray_tmp_file" $v2ray_download_link; then
@@ -186,8 +182,8 @@ main() {
   get_SYS_BIT
   install_caddy
   install_v2fly
-  #uninstall_caddy
-  #uninstall_v2fly
+  uninstall_caddy
+  uninstall_v2fly
   echo
 }
 
