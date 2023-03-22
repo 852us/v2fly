@@ -337,6 +337,7 @@ config() {
   config_domain
   config_caddy
   config_v2ray
+  make_vmess
 }
 
 install_caddy_service() {
@@ -477,7 +478,7 @@ uninstall() {
   show_service_status
 }
 
-show_info(){
+make_vmess(){
   cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
 {
   "ps": "${DOMAIN}",
@@ -492,7 +493,14 @@ show_info(){
   "tls": "tls"
 }
 EOF
-  cat ${V2RAY_CONFIG_PATH}/vmess.json
+}
+
+show_info() {
+  if [[ -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
+    cat ${V2RAY_CONFIG_PATH}/vmess.json
+  else
+    red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
+  fi
 }
 
 show_menu() {
