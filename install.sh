@@ -206,10 +206,9 @@ config_domain() {
 
     echo
     echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
-    DOMAIN_IP=$(dig ${DOMAIN} | awk '/^${DOMAIN}/{print $5}')
+    DOMAIN_IP=$(dig ${DOMAIN} | awk "/^${DOMAIN}/{print $5}")
     if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
-      echo
-      echo -e "${RED} ${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入域名米有解析到当前主机 ... ${NOCOLOR}"
+      echo -e "${RED}${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入域名米有解析到当前主机 ... ${NOCOLOR}"
       error
       continue
     else
