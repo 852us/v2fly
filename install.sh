@@ -480,7 +480,23 @@ show_menu() {
 
 main() {
   verify_root_user
-  show_menu
+
+  args=$1
+  [ -z $1 ] && args="menu"
+  case $args in
+  m | menu)
+    show_menu
+    ;;
+  status)
+    show_service_status
+    ;;
+  un | uninstall)
+    uninstall
+    ;;
+  *)
+    show_menu
+    ;;
+  esac
 }
 
 main
