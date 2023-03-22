@@ -129,17 +129,6 @@ install_caddy() {
   fi
 }
 
-uninstall_caddy() {
-  echo
-  if [[ ! -f ${CADDY} ]] ; then
-    echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
-  else
-    echo -e "${RED}正在卸载Caddy ... ${NOCOLOR}"
-    rm -f ${CADDY}
-    echo -e "${RED}完成Caddy卸载 ${NOCOLOR}"
-  fi
-}
-
 install_v2ray() {
   echo
   echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
@@ -170,15 +159,24 @@ install_v2ray() {
   [[ -f ${V2RAY_TEMP_FILE} ]] && rm -f ${V2RAY_TEMP_FILE}
 }
 
+uninstall_caddy() {
+  echo
+  if [[ ! -f ${CADDY} ]] ; then
+    echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
+  else
+    rm -f ${CADDY}
+    echo -e "${RED}已卸载Caddy ${NOCOLOR}"
+  fi
+}
+
 uninstall_v2ray() {
   echo
   if [[ ! -f ${V2RAY} ]] ; then
     echo -e "${RED}未安装V2Ray，无需卸载 ... ${NOCOLOR}"
   else
-    echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
     rm -f ${V2RAY}
     [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
-    echo -e "${RED}完成V2Ray卸载 ${NOCOLOR}"
+    echo -e "${RED}已卸载V2Ray ${NOCOLOR}"
   fi
 }
 
