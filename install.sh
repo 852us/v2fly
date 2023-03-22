@@ -476,6 +476,10 @@ uninstall() {
   show_service_status
 }
 
+show_url(){
+  :
+}
+
 show_menu() {
   while :; do
     echo
@@ -522,9 +526,6 @@ main() {
   args=$1
   [ -z $1 ] && args="menu"
   case $args in
-  m | menu)
-    show_menu
-    ;;
   i | install)
     install
     ;;
@@ -532,11 +533,20 @@ main() {
     prepare_system
     install
     ;;
-  status)
+  m | menu)
+    show_menu
+    ;;
+  r | restart)
+    restart_services
+    ;;
+  s | status)
     show_service_status
     ;;
   u | uninstall)
     uninstall
+    ;;
+  url)
+    show_url
     ;;
   *)
     show_menu
