@@ -263,16 +263,16 @@ config_caddy() {
   mkdir -p ${CADDY_CONFIG_PATH}/sites
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
-    ${DOMAIN} {
-        reverse_proxy ${MASK_DOMAIN} {
-            header_up Host {upstream_hostport}
-            header_up X-Forwarded-Host {host}
-        }
-        handle_path /${FLOW_PATH} {
-            reverse_proxy 127.0.0.1:${V2RAY_PORT}
-        }
-    }
-    import sites/*
+${DOMAIN} {
+  reverse_proxy ${MASK_DOMAIN} {
+    header_up Host {upstream_hostport}
+    header_up X-Forwarded-Host {host}
+  }
+  handle_path /${FLOW_PATH} {
+    reverse_proxy 127.0.0.1:${V2RAY_PORT}
+  }
+}
+import sites/*
 EOF
   green "Caddy已正确配置 ... "
 }
@@ -284,52 +284,52 @@ config_v2ray() {
   mkdir -p ${V2RAY_CONFIG_PATH}
 
   cat >${V2RAY_CONFIG_FILE} <<-EOF
+{
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [
     {
-      "log": {
-        "access": "/var/log/v2ray/access.log",
-        "error": "/var/log/v2ray/error.log",
-        "loglevel": "warning"
-      },
-      "inbounds": [
-        {
-          "port": ${V2RAY_PORT},
-          "protocol": "${PROTOCOL}",
-          "settings": {
-            "clients": [
-              {
-                "id": "${UUID}",
-                "level": 1,
-                "alterId": 0
-              }
-            ]
-          },
-          "streamSettings": {
-            "network": "ws"
-          },
-          "sniffing": {
-            "enabled": true,
-            "destOverride": [
-              "http",
-              "tls"
-            ]
+      "port": ${V2RAY_PORT},
+      "protocol": "${PROTOCOL}",
+      "settings": {
+        "clients": [
+          {
+            "id": "${UUID}",
+            "level": 1,
+            "alterId": 0
           }
-        }
-      ],
-      "outbounds": [
-        {
-          "protocol": "freedom",
-          "settings": {
-            "domainStrategy": "UseIP"
-          },
-          "tag": "direct"
-        },
-        {
-          "protocol": "blackhole",
-          "settings": {},
-          "tag": "blocked"
-        }
-      ]
+        ]
+      },
+      "streamSettings": {
+        "network": "ws"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
     }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ]
+}
 EOF
 }
 
@@ -343,28 +343,28 @@ install_caddy_service() {
   echo
   green "Caddy服务安装进行中 ..."
   cat >${CADDY_SERVICE_FILE} <<-EOF
-    # Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
-    # CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
-    [Unit]
-    Description=Caddy
-    Documentation=https://caddyserver.com/docs/
-    After=network.target network-online.target
-    Requires=network-online.target
+# Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
+# CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
+[Unit]
+Description=Caddy
+Documentation=https://caddyserver.com/docs/
+After=network.target network-online.target
+Requires=network-online.target
 
-    [Service]
-    Type=notify
-    User=root
-    Group=root
-    ExecStart=/usr/local/bin/caddy run --environ --config /etc/caddy/Caddyfile
-    ExecReload=/usr/local/bin/caddy reload --config /etc/caddy/Caddyfile
-    TimeoutStopSec=5s
-    LimitNOFILE=1048576
-    LimitNPROC=512
-    PrivateTmp=true
-    ProtectSystem=full
+[Service]
+Type=notify
+User=root
+Group=root
+ExecStart=/usr/local/bin/caddy run --environ --config /etc/caddy/Caddyfile
+ExecReload=/usr/local/bin/caddy reload --config /etc/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 EOF
 
   check_services_status
@@ -384,24 +384,24 @@ install_v2ray_service() {
   fi
   mkdir -p ${V2RAY_LOG_PATH}
   cat >${V2RAY_SERVICE_FILE} <<-EOF
-    [Unit]
-    Description=V2Ray Service
-    Documentation=https://www.v2fly.org/
-    After=network.target nss-lookup.target
+[Unit]
+Description=V2Ray Service
+Documentation=https://www.v2fly.org/
+After=network.target nss-lookup.target
 
-    [Service]
-    Type=simple
-    User=root
-    Environment="V2RAY_VMESS_AEAD_FORCED=false"
-    NoNewPrivileges=true
-    ExecStart=/usr/bin/env v2ray.vmess.aead.forced=false ${V2RAY} run -config ${V2RAY_CONFIG_FILE}
-    Restart=on-failure
-    StartLimitBurst=0
-    LimitNOFILE=1048576
-    LimitNPROC=512
+[Service]
+Type=simple
+User=root
+Environment="V2RAY_VMESS_AEAD_FORCED=false"
+NoNewPrivileges=true
+ExecStart=/usr/bin/env v2ray.vmess.aead.forced=false ${V2RAY} run -config ${V2RAY_CONFIG_FILE}
+Restart=on-failure
+StartLimitBurst=0
+LimitNOFILE=1048576
+LimitNPROC=512
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 EOF
 
   check_services_status
@@ -479,18 +479,18 @@ uninstall() {
 
 show_url(){
   cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
-    {
-      "ps": "${DOMAIN}",
-      "add": "${DOMAIN}",
-      "port": "443",
-      "id": "${UUID}",
-      "aid": "0",
-      "net": "${TRANSPORT}",
-      "type": "none",
-      "host": "${DOMAIN}",
-      "path": "${FLOW_PATH}",
-      "tls": "tls"
-    }
+{
+  "ps": "${DOMAIN}",
+  "add": "${DOMAIN}",
+  "port": "443",
+  "id": "${UUID}",
+  "aid": "0",
+  "net": "${TRANSPORT}",
+  "type": "none",
+  "host": "${DOMAIN}",
+  "path": "${FLOW_PATH}",
+  "tls": "tls"
+}
 EOF
   cat ${V2RAY_CONFIG_PATH}/vmess.json
 }
