@@ -26,7 +26,7 @@ MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 PROTOCOL="vmess"
-UUID=$(uuidgen -4)
+UUID=$(uuidgen -r)
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
 _exit() {
@@ -259,7 +259,7 @@ config_v2ray() {
   fi
   mkdir -p ${V2RAY_CONFIG_PATH}
   cat >${V2RAY_CONFIG_FILE} <<-EOF
-  {
+{
   "log": {
     "access": "/var/log/v2ray/access.log",
     "error": "/var/log/v2ray/error.log",
