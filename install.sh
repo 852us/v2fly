@@ -227,7 +227,7 @@ ${DOMAIN} {
     }
 }
 import sites/*
-  EOF
+EOF
 }
 
 install_caddy_service() {
@@ -254,7 +254,7 @@ ProtectSystem=full
 
 [Install]
 WantedBy=multi-user.target
-  EOF
+EOF
 
   check_services_status
   if [ ${CADDY_PID} ] ; then
