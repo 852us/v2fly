@@ -214,7 +214,7 @@ config_domain() {
     echo
     red "请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
-    if [ -z "${DOMAIN}" ] ; then
+    if [ -z "${DOMAIN}" ]; then
       red "输入的域名为空，重来 ..."
       continue
     fi
@@ -343,7 +343,7 @@ WantedBy=multi-user.target
 EOF
 
   check_services_status
-  if [ ${CADDY_PID} ] ; then
+  if [ ${CADDY_PID} ]; then
     systemctl daemon-reload
   fi
   systemctl enable caddy
@@ -422,7 +422,7 @@ show_menu() {
     green " 3. 卸载Caddy与V2Ray "
     echo
 
-    read -p "$(echo 请选择[1-3]: )" choose
+    read -p "$(echo 请选择[1-3]:)" choose
     case $choose in
     1)
       prepare_system
