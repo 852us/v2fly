@@ -470,6 +470,7 @@ install() {
   config
   install_services
   show_service_status
+  show_info
 }
 
 uninstall() {
