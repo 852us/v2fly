@@ -313,7 +313,7 @@ check_services_status() {
 show_service_status() {
   check_services_status
   echo
-  echo -e "V2Ray 状态: $V2RAY_STATUS  /  Caddy 状态: $CADDY_STATUS"
+  echo -e "V2Ray 状态: $V2RAY_STATUS  /  Caddy 状态: $CADDY_STATUS ${NOCOLOR}"
   echo
 }
 
