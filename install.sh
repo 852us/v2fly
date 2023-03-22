@@ -15,6 +15,7 @@ V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
 CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
+CADDY_SERVICE_FILE=""
 
 DOMAIN="852us.com"
 FLOW_PATH="api"
@@ -208,13 +209,12 @@ config_domain() {
 
 config_caddy() {
   config_domain
-
   if [[ -d ${CADDY_CONFIG_PATH}/sites ]] ; then
     rm -rf ${CADDY_CONFIG_PATH}/sites
   else
     mkdir -p ${CADDY_CONFIG_PATH}/sites
   fi
-  
+
   cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
     reverse_proxy "https://www.gnu.org/" {
@@ -226,7 +226,34 @@ ${DOMAIN} {
     }
 }
 import sites/*
-		EOF
+EOF
+}
+
+install_caddy_service() {
+  cat >${CADDY_SERVICE_FILE} <<-EOF
+# Refer to: https://github.com/caddyserver/dist/blob/master/init/caddy.service
+# CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
+[Unit]
+Description=Caddy
+Documentation=https://caddyserver.com/docs/
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+Type=notify
+User=root
+Group=root
+ExecStart=/usr/local/bin/caddy run --environ --config /etc/caddy/Caddyfile
+ExecReload=/usr/local/bin/caddy reload --config /etc/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+EOF
 }
 
 show_menu() {
@@ -251,6 +278,7 @@ show_menu() {
       set_timezone
       install_caddy
       config_caddy
+      install_caddy_service
       install_v2ray
       break
       ;;
@@ -258,6 +286,7 @@ show_menu() {
       get_SYS_BIT
       install_caddy
       config_caddy
+      install_caddy_service
       install_v2ray
       break
       ;;
