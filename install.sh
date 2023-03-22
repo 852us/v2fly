@@ -445,7 +445,9 @@ show_service_status() {
 }
 
 restart_services() {
-  systemctl restart caddy v2ray
+  systemctl stop caddy v2ray
+  show_service_status
+  systemctl stop caddy v2ray
   show_service_status
 }
 
