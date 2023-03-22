@@ -176,7 +176,7 @@ main() {
   get_SYS_BIT
   install_caddy
   install_v2fly
-  uninstall_v2fly
+  #uninstall_v2fly
   echo
 }
 
