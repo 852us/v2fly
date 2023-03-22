@@ -480,7 +480,8 @@ uninstall() {
 
 make_vmess(){
   cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
-vmes://{
+{
+  "v": "2"
   "ps": "${DOMAIN}",
   "add": "${DOMAIN}",
   "port": "443",
