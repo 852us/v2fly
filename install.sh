@@ -308,6 +308,27 @@ show_service_status() {
   echo
 }
 
+prepare_system() {
+  get_pkg_cmd
+  update_os
+  install_packages
+  set_timezone
+}
+
+install() {
+  get_SYS_BIT
+  install_caddy
+  install_v2ray
+  config
+  install_caddy_service
+  show_service_status
+}
+
+uninstall() {
+  uninstall_caddy
+  uninstall_v2ray
+}
+
 show_menu() {
   while :; do
     echo
@@ -323,30 +344,16 @@ show_menu() {
     read -p "$(echo -e "${GREEN}请选择[1-3]: ${NOCOLOR}")" choose
     case $choose in
     1)
-      get_SYS_BIT
-      get_pkg_cmd
-      update_os
-      install_packages
-      set_timezone
-      install_caddy
-      install_v2ray
-      install_caddy_service
-      config
-      show_service_status
+      prepare_system
+      install
       break
       ;;
     2)
-      get_SYS_BIT
-      install_caddy
-      install_v2ray
-      install_caddy_service
-      config
-      show_service_status
+      install
       break
       ;;
     3)
-      uninstall_caddy
-      uninstall_v2ray
+      uninstall
       break
       ;;
     *)
