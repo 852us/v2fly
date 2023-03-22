@@ -128,6 +128,16 @@ install_caddy() {
   fi
 }
 
+uninstall_caddy() {
+  echo
+  echo -e "${RED}正在卸载Caddy ... ${NOCOLOR}"
+
+  [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
+  [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
+  [[ -f ${CADDY} ]] && rm -f ${CADDY}
+  echo -e "${RED}完成Caddy卸载 ${NOCOLOR}"
+}
+
 install_v2fly() {
   echo
   echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
@@ -161,11 +171,11 @@ install_v2fly() {
 
 uninstall_v2fly() {
   echo
-  echo -e "${RED}卸载V2Ray ... ${NOCOLOR}"
+  echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
 
   [[ -f ${V2RAY} ]] && rm -f ${V2RAY}
   [[ -d ${V2FLY_PATH} ]] && rm -rf ${V2FLY_PATH}
-  echo -e "${RED}卸载V2Ray完成 ${NOCOLOR}"
+  echo -e "${RED}完成V2Ray卸载 ${NOCOLOR}"
 }
 
 main() {
@@ -176,6 +186,7 @@ main() {
   get_SYS_BIT
   install_caddy
   install_v2fly
+  #uninstall_caddy
   #uninstall_v2fly
   echo
 }
