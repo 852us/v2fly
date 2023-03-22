@@ -78,12 +78,10 @@ get_pkg_cmd() {
   green "OS_TYPE=$OS_TYPE "
   case $OS_TYPE in
   "debian")
-    :
     echo "Debian-like Linux, including Debian and Ubuntu Linux."
     PKG_CMD="apt"
     ;;
   "fedora")
-    :
     echo "Fedora-like Linux, including Red Hat, Centos, and Fedora Linux."
     PKG_CMD="yum"
     ;;
