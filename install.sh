@@ -24,7 +24,7 @@ V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
 MAGIC_URL="852us.com"
 DOMAIN=""
 FAKE_DOMAIN="https://www.gnu.org"
-FLOW_PATH="api"
+FLOW_PATH="/api"
 V2RAY_PORT="12345"
 PROTOCOL="vmess"
 TRANSPORT="ws" # WebSocket
@@ -268,7 +268,7 @@ ${DOMAIN} {
     header_up Host {upstream_hostport}
     header_up X-Forwarded-Host {host}
   }
-  handle_path /${FLOW_PATH} {
+  handle_path ${FLOW_PATH} {
     reverse_proxy 127.0.0.1:${V2RAY_PORT}
   }
 }
@@ -481,7 +481,7 @@ uninstall() {
 make_vmess(){
   cat >${V2RAY_CONFIG_PATH}/vmess.json <<-EOF
 {
-  "v": "2"
+  "v": "2",
   "ps": "${DOMAIN}",
   "add": "${DOMAIN}",
   "port": "443",
