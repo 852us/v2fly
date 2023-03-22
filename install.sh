@@ -194,12 +194,13 @@ main() {
 show_menu() {
   while :; do
     echo
-    echo " 1. 安装"
+    echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
+    echo -e "${GREEN} 1. 安装 ${NOCOLOR}"
     echo
-    echo " 2. 卸载"
+    echo -e "${GREEN} 2. 卸载 ${NOCOLOR}"
     echo
 
-    read -p "$(echo -e "请选择[1-2]:")" choose
+    read -p "$(echo -e "${GREEN}请选择[1-2]: ${NOCOLOR}")" choose
     case $choose in
     1)
       install_caddy
