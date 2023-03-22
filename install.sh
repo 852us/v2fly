@@ -481,11 +481,17 @@ show_menu() {
 main() {
   verify_root_user
   args=$1
-  red "Command Line: $0 $args"
   [ -z $1 ] && args="menu"
   case $args in
   m | menu)
     show_menu
+    ;;
+  i | install)
+    install
+    ;;
+  ia | install_all)
+    prepare_system
+    install
     ;;
   status)
     show_service_status
