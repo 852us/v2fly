@@ -10,8 +10,8 @@ SYS_BIT=""
 V2RAY_BIT=""
 CADDY_ARCH=""
 PACKAGES="curl git wget unzip"
-V2FLY_PATH="/usr/bin/v2fly"
-V2RAY="/usr/bin/v2ray"
+V2FLY_PATH="/usr/local/bin/v2fly"
+V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
 
 
