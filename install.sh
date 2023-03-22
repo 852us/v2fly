@@ -17,6 +17,7 @@ CADDY_CONFIG_PATH="/etc/caddy"
 CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
 CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
 
+MAGIC_URL="852us.com"
 DOMAIN="852us.com"
 MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
@@ -201,7 +202,7 @@ config_domain() {
   while :; do
     echo
     echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
-    read -p "(例如：${DOMAIN}): " DOMAIN
+    read -p "(例如：${MAGIC_URL}): " DOMAIN
     [ -z "${DOMAIN}" ] && error && continue
 
     echo
