@@ -258,7 +258,7 @@ EOF
 
   check_services_status
   if [ ${CADDY_PID} ] ; then
-    systemctl daemon-reload caddy
+    systemctl reload caddy
   fi
   systemctl enable caddy
   systemctl restart caddy
