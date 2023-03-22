@@ -220,7 +220,6 @@ config_domain() {
 }
 
 config_caddy() {
-  config_domain
   if [[ -d ${CADDY_CONFIG_PATH}/sites ]]; then
     rm -rf ${CADDY_CONFIG_PATH}/sites
   else
