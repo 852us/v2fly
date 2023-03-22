@@ -184,6 +184,7 @@ uninstall_v2ray() {
 
 show_menu() {
   while :; do
+    echo
     echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
     echo
     echo -e "${GREEN} 1. 安装Caddy与V2Ray${NOCOLOR}"
