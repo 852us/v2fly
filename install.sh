@@ -33,6 +33,29 @@ verify_root_user() {
   fi
 }
 
+get_SYS_BIT() {
+  SYS_BIT=$(uname -m)
+  case ${SYS_BIT} in
+  'amd64' | x86_64)
+    V2RAY_BIT="64"
+    CADDY_ARCH="amd64"
+    ;;
+  *aarch64* | *armv8*)
+    V2RAY_BIT="arm64-v8a"
+    CADDY_ARCH="arm64"
+    ;;
+  *)
+    echo
+    echo -e "${RED}不支持现有的体系结构${SYS_BIT} ... ${NOCOLOR}"
+    _exit 1
+    ;;
+  esac
+  echo
+  echo -e "${GREEN}支持的体系结构：${SYS_BIT} ... ${NOCOLOR}"
+  echo "  CADDY_ARCH: ${CADDY_ARCH}"
+  echo "  V2RAY_BIT: ${V2RAY_BIT}"
+}
+
 get_pkg_cmd() {
   OS_TYPE=$(awk -F'[="]' '/^ID_LIKE=/{print $2$3}' /etc/os-release)
   echo -e "${GREEN}OS_TYPE=$OS_TYPE ${NOCOLOR}"
@@ -65,29 +88,6 @@ install_packages() {
     echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
     $PKG_CMD install $pkg -y
   done
-}
-
-get_SYS_BIT() {
-  SYS_BIT=$(uname -m)
-  case ${SYS_BIT} in
-  'amd64' | x86_64)
-    V2RAY_BIT="64"
-    CADDY_ARCH="amd64"
-    ;;
-  *aarch64* | *armv8*)
-    V2RAY_BIT="arm64-v8a"
-    CADDY_ARCH="arm64"
-    ;;
-  *)
-    echo
-    echo -e "${RED}不支持现有的体系结构${SYS_BIT} ... ${NOCOLOR}"
-    _exit 1
-    ;;
-  esac
-  echo
-  echo -e "${GREEN}支持的体系结构：${SYS_BIT} ... ${NOCOLOR}"
-  echo "  CADDY_ARCH: ${CADDY_ARCH}"
-  echo "  V2RAY_BIT: ${V2RAY_BIT}"
 }
 
 install_caddy() {
@@ -188,11 +188,11 @@ uninstall_v2fly() {
 
 main() {
   verify_root_user
+  get_SYS_BIT
   show_menu
   get_pkg_cmd
   update_os
   install_packages
-  get_SYS_BIT
   install_caddy
   install_v2fly
   echo
