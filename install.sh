@@ -182,14 +182,22 @@ show_menu() {
   while :; do
     echo
     echo -e "${GREEN}V2ray一键安装脚本：${VERSION} ${NOCOLOR}"
-    echo -e "${GREEN} 1. 安装 ${NOCOLOR}"
+    echo -e "${GREEN} 1. 安装Caddy与V2ray${NOCOLOR}"
     echo
-    echo -e "${GREEN} 2. 卸载 ${NOCOLOR}"
+    echo -e "${GREEN} 2. 全新安装：更新操作系统、安装Caddy与V2ray ${NOCOLOR}"
+    echo
+    echo -e "${GREEN} 3. 卸载Caddy与V2ray ${NOCOLOR}"
     echo
 
-    read -p "$(echo -e "${GREEN}请选择[1-2]: ${NOCOLOR}")" choose
+    read -p "$(echo -e "${GREEN}请选择[1-3]: ${NOCOLOR}")" choose
     case $choose in
     1)
+      get_SYS_BIT
+      install_caddy
+      install_v2ray
+      break
+      ;;
+    2)
       get_SYS_BIT
       get_pkg_cmd
       update_os
@@ -198,7 +206,7 @@ show_menu() {
       install_v2ray
       break
       ;;
-    2)
+    3)
       uninstall_caddy
       uninstall_v2ray
       break
