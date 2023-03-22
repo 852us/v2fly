@@ -141,7 +141,7 @@ uninstall_caddy() {
   echo -e "${RED}完成Caddy卸载 ${NOCOLOR}"
 }
 
-install_v2fly() {
+install_v2ray() {
   echo
   echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
 
@@ -171,7 +171,7 @@ install_v2fly() {
   [[ -f ${V2RAY_TEMP_FILE} ]] && rm -f ${V2RAY_TEMP_FILE}
 }
 
-uninstall_v2fly() {
+uninstall_v2ray() {
   echo
   echo -e "${RED}正在卸载V2Ray ... ${NOCOLOR}"
 
@@ -197,12 +197,12 @@ show_menu() {
       update_os
       install_packages
       install_caddy
-      install_v2fly
+      install_v2ray
       break
       ;;
     2)
       uninstall_caddy
-      uninstall_v2fly
+      uninstall_v2ray
       break
       ;;
     *)
