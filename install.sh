@@ -354,7 +354,26 @@ EOF
 install_v2ray_service() {
   echo
   green "V2Ray服务安装进行中 ..."
+  cat >${V2RAY_SERVICE_FILE} <<-EOF
+[Unit]
+Description=V2Ray Service
+Documentation=https://www.v2fly.org/
+After=network.target nss-lookup.target
 
+[Service]
+Type=simple
+User=root
+Environment="V2RAY_VMESS_AEAD_FORCED=false"
+NoNewPrivileges=true
+ExecStart=/usr/bin/env v2ray.vmess.aead.forced=false ${V2RAY} run -config ${V2RAY_CONFIG_FILE}
+Restart=on-failure
+StartLimitBurst=0
+LimitNOFILE=1048576
+LimitNPROC=512
+
+[Install]
+WantedBy=multi-user.target
+EOF
   green "V2Ray服务安装已完成 ..."
 }
 
