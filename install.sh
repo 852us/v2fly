@@ -292,6 +292,8 @@ EOF
 }
 
 check_services_status() {
+  echo
+  echo "检测V2Ray与Caddy服务的状态 ... "
   sleep 2s
   V2RAY_PID=$(pgrep -f ${V2RAY})
   CADDY_PID=$(pgrep -f ${CADDY})
