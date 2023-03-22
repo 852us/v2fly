@@ -498,19 +498,17 @@ EOF
 }
 
 show_info() {
-  if [[ -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
-    cat ${V2RAY_CONFIG_PATH}/vmess.json
-  else
+  if [[ ! -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
     red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
+  else
+    echo
+    green "-------------------- 配置信息 --------------------"
+    cat ${V2RAY_CONFIG_PATH}/vmess.json
+    echo
+    echo "-------------------- V2Ray vmess URL --------------------"
+    green "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
+    echo
   fi
-  show_url
-}
-
-show_url(){
-  echo
-  echo "-------------------- V2Ray vmess URL --------------------"
-  green "vmess://$(cat /etc/v2ray/vmess.json | base64 -w 0)"
-  echo
 }
 
 show_menu() {
@@ -604,9 +602,6 @@ main() {
     ;;
   u | uninstall)
     uninstall
-    ;;
-  url)
-    show_url
     ;;
   h | help | *)
     show_help $0
