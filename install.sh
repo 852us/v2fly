@@ -230,16 +230,17 @@ show_menu() {
       get_pkg_cmd
       update_os
       install_packages
-      install_caddy
-      install_v2ray
       set_timezone
+      install_caddy
+      config_caddy
+      install_v2ray
       break
       ;;
     2)
       get_SYS_BIT
       install_caddy
+      config_caddy
       install_v2ray
-      set_timezone
       break
       ;;
     3)
