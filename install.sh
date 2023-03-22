@@ -18,6 +18,7 @@ CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH}/Caddyfile"
 CADDY_SERVICE_FILE="/lib/systemd/system/caddy.service"
 V2RAY_CONFIG_PATH="/etc/v2ray"
 V2RAY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/config.json"
+V2RAY_LOG_PATH="/var/log/v2ray"
 V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
 
 MAGIC_URL="852us.com"
@@ -258,6 +259,7 @@ config_v2ray() {
     rm -rf ${V2RAY_CONFIG_PATH}
   fi
   mkdir -p ${V2RAY_CONFIG_PATH}
+  mkdir -p ${V2RAY_LOG_PATH}
   cat >${V2RAY_CONFIG_FILE} <<-EOF
 {
   "log": {
