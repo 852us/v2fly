@@ -20,6 +20,10 @@ _exit () {
   exit $@
 }
 
+error() {
+  echo -e "${RED}错误选择，请输入正确的选项 ... ${NOCOLOR}"
+}
+
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
@@ -163,6 +167,7 @@ install_v2fly() {
   unzip -o $V2RAY_TEMP_FILE -d ${V2FLY_PATH}
   chmod +x ${V2FLY_PATH}/v2ray
   cp ${V2FLY_PATH}/v2ray ${V2RAY}
+  [[ -f ${V2RAY_TEMP_FILE} ]] && rm -f ${V2RAY_TEMP_FILE}
 }
 
 uninstall_v2fly() {
@@ -176,15 +181,41 @@ uninstall_v2fly() {
 
 main() {
   verify_root_user
+  show_menu
   get_pkg_cmd
   update_os
   install_packages
   get_SYS_BIT
   install_caddy
   install_v2fly
-  uninstall_caddy
-  uninstall_v2fly
   echo
+}
+
+show_menu() {
+  while :; do
+    echo
+    echo " 1. 安装"
+    echo
+    echo " 2. 卸载"
+    echo
+
+    read -p "$(echo -e "请选择[1-2]:")" choose
+    case $choose in
+    1)
+      install_caddy
+      install_v2fly
+      break
+      ;;
+    2)
+      uninstall_caddy
+      uninstall_v2fly
+      break
+      ;;
+    *)
+      error
+      ;;
+    esac
+  done
 }
 
 main
