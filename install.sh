@@ -41,10 +41,6 @@ red() {
   echo -e "${RED}$@ ${NOCOLOR}"
 }
 
-plain() {
-  echo -e "${NOCOLOR}$@ "
-}
-
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
@@ -92,7 +88,7 @@ get_pkg_cmd() {
     PKG_CMD="yum"
     ;;
   esac
-  echo -e Package Manament Tool: $PKG_CMD
+  echo "Package Manament Tool: $PKG_CMD"
   echo
   export PKG_CMD=${PKG_CMD:-apt}
 }
