@@ -15,6 +15,7 @@ _exit () {
   echo
   exit $@
 }
+
 verify_root_user() {
   if [[ $EUID -ne 0 ]]; then
     echo
@@ -160,11 +161,15 @@ install_v2fly() {
   download_v2fly
 }
 
-verify_root_user
-get_pkg_cmd
-update_os
-install_packages
-get_SYS_BIT
-install_caddy
-install_v2fly
-echo
+main() {
+  verify_root_user
+  get_pkg_cmd
+  update_os
+  install_packages
+  get_SYS_BIT
+  install_caddy
+  install_v2fly
+  echo
+}
+
+main
