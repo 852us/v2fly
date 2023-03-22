@@ -13,7 +13,12 @@ PACKAGES="curl git wget unzip"
 V2FLY_PATH="/usr/local/bin/v2fly"
 V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
+CADDY_CONFIG_PATH="/etc/caddy"
+CADDY_CONFIG_FILE="${CADDY_CONFIG_PATH/Caddyfile}"
 
+DOMAIN="jp5.gocoin.one"
+FLOW_PATH="api"
+V2RAY_PORT="12345"
 
 _exit () {
   echo
@@ -173,6 +178,7 @@ uninstall_caddy() {
     echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
   else
     rm -f ${CADDY}
+    [[ -d ${CADDY_CONFIG_PATH} ]] && rm -rf ${CADDY_CONFIG_PATH}
     echo -e "${RED}已卸载Caddy ${NOCOLOR}"
   fi
 }
@@ -189,22 +195,22 @@ uninstall_v2ray() {
 }
 
 config_caddy() {
-  # DOMAIN="jp5.gocoin.one"
-  # FLOW_PATH="/api"
-  echo "
-$DOMAIN {
-  reverse_proxy https://www.gnu.org {
-      header_up Host {upstream_hostport}
-      header_up X-Forwarded-Host {host}
-  }
-  handle_path $FLOW_PATH {
-      reverse_proxy 127.0.0.1:36704
-  }
-}
-" > /etc/CaddyFile
+  [[ ! -d ${CADDY_CONFIG_PATH}/sites ]] && mkdir -p ${CADDY_CONFIG_PATH}/sites
+
+  cat > ${CADDY_CONFIG_FILE} <<-EOF
+${DOMAIN} {
+    reverse_proxy "https://www.gnu.org/" {
+        header_up Host {upstream_hostport}
+        header_up X-Forwarded-Host {host}
+    }
+    handle_path /${FLOW_PATH} {
+        reverse_proxy 127.0.0.1:${V2RAY_PORT}
+    }
 }
 import sites/*
+		EOF
 }
+
 show_menu() {
   while :; do
     echo
