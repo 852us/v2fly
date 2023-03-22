@@ -102,9 +102,9 @@ install_caddy() {
   CADDY_DOWNLOAD_URL="https://github.com/caddyserver/caddy/releases/download"
   CADDY_DOWNLOAD_URL="${CADDY_DOWNLOAD_URL}/${CADDY_LATEST_VERSION}/caddy_${CADDY_LATEST_VERSION_NUMBER}_linux_${CADDY_ARCH}.tar.gz"
 
-  caddy_current_version=$(caddy version | awk -F ' ' '{print $1}')
-  if [[ ${caddy_current_version} = ${CADDY_LATEST_VERSION} ]]; then
-    echo -e "${RED}Caddy当前安装版本：${caddy_current_version}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
+  CADDY_CURRENT_VERSION="$(caddy version | awk -F ' ' '{print $1}')"
+  if [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
+    echo -e "${RED}Caddy当前安装版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
 
@@ -147,7 +147,7 @@ install_v2fly() {
   V2RAY_URL="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   V2RAY_LATEST_VERSION=$(curl -s ${V2RAY_URL} | grep 'tag_name' | awk -F \" '{print $4}')
   V2RAY_LATEST_VERSION_NUMBER=${V2RAY_LATEST_VERSION/v/}
-  V2RAY_CURRENT_VERSION_NUMBER=$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')
+  V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
 
   V2RAY_TEMP_FILE="/tmp/v2ray.zip"
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
