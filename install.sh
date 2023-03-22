@@ -22,7 +22,7 @@ MASK_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 
-_exit () {
+_exit() {
   echo
   exit $@
 }
@@ -96,11 +96,11 @@ install_packages() {
 }
 
 set_timezone() {
-	echo
-	timedatectl set-timezone Asia/Shanghai
-	timedatectl set-ntp true
-	echo -e "${GREEN}已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。${NOCOLOR}"
-	echo
+  echo
+  timedatectl set-timezone Asia/Shanghai
+  timedatectl set-ntp true
+  echo -e "${GREEN}已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。${NOCOLOR}"
+  echo
 }
 
 install_caddy() {
@@ -117,7 +117,7 @@ install_caddy() {
   CADDY_CURRENT_VERSION=""
 
   [[ -f ${CADDY} ]] && CADDY_CURRENT_VERSION=$(caddy version | awk -F' ' '{print $1}')
-  if [[ ${CADDY_CURRENT_VERSION} = ${CADDY_LATEST_VERSION} ]]; then
+  if [[ ${CADDY_CURRENT_VERSION} == ${CADDY_LATEST_VERSION} ]]; then
     echo -e "${RED}Caddy当前版本：${CADDY_CURRENT_VERSION}，与最新版本：${CADDY_LATEST_VERSION}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
@@ -156,8 +156,8 @@ install_v2ray() {
   V2RAY_DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/"
   V2RAY_DOWNLOAD_URL="${V2RAY_DOWNLOAD_URL}/${V2RAY_LATEST_VERSION}/v2ray-linux-${V2RAY_BIT}.zip"
 
-  [[ -f ${V2RAY} ]] &&   V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
-  if [[ ${V2RAY_CURRENT_VERSION_NUMBER} = ${V2RAY_LATEST_VERSION_NUMBER} ]]; then
+  [[ -f ${V2RAY} ]] && V2RAY_CURRENT_VERSION_NUMBER="$(v2ray version | awk -F ' ' '/V2Ray/{print $2}')"
+  if [[ ${V2RAY_CURRENT_VERSION_NUMBER} == ${V2RAY_LATEST_VERSION_NUMBER} ]]; then
     echo -e "${RED}V2Ray当前版本：${V2RAY_CURRENT_VERSION_NUMBER}，与最新版本：${V2RAY_LATEST_VERSION_NUMBER}相同，无需安装 ... ${NOCOLOR}"
     return 1
   fi
@@ -176,7 +176,7 @@ install_v2ray() {
 
 uninstall_caddy() {
   echo
-  if [[ ! -f ${CADDY} ]] ; then
+  if [[ ! -f ${CADDY} ]]; then
     echo -e "${RED}未安装Caddy，无需卸载 ... ${NOCOLOR}"
   else
     rm -f ${CADDY}
@@ -187,7 +187,7 @@ uninstall_caddy() {
 
 uninstall_v2ray() {
   echo
-  if [[ ! -f ${V2RAY} ]] ; then
+  if [[ ! -f ${V2RAY} ]]; then
     echo -e "${RED}未安装V2Ray，无需卸载 ... ${NOCOLOR}"
   else
     rm -f ${V2RAY}
@@ -198,19 +198,19 @@ uninstall_v2ray() {
 
 config_domain() {
   while :; do
-		echo
-		echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
-		read -p "(例如：${DOMAIN}): " DOMAIN
-		[ -z "${DOMAIN}" ] && error && continue
-		echo
-		echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
-		break
-	done
+    echo
+    echo -e "${RED}请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！${NOCOLOR}"
+    read -p "(例如：${DOMAIN}): " DOMAIN
+    [ -z "${DOMAIN}" ] && error && continue
+    echo
+    echo -e "${GREEN}输入的域名：${DOMAIN} ${NOCOLOR}"
+    break
+  done
 }
 
 config_caddy() {
   config_domain
-  if [[ -d ${CADDY_CONFIG_PATH}/sites ]] ; then
+  if [[ -d ${CADDY_CONFIG_PATH}/sites ]]; then
     rm -rf ${CADDY_CONFIG_PATH}/sites
   else
     mkdir -p ${CADDY_CONFIG_PATH}/sites
@@ -261,7 +261,26 @@ EOF
 
   systemctl enable caddy
   systemctl start caddy
-  systemctl status caddy 
+  systemctl status caddy
+}
+
+check_services_status() {
+  V2RAY_PID=$(pgrep -f ${V2RAY})
+  CADDY_PID=$(pgrep -f ${CADDY})
+
+  if [ ${V2RAY_PID} ]; then
+    V2RAY_STATUS="${GREEN}正在运行${NOCOLOR}"
+  else
+    V2RAY_STATUS="${RED}未在运行${NOCOLOR}"
+  fi
+  if [ ${CADDY_PID} ]; then
+    CADDY_STATUS="${GREEN}正在运行${NOCOLOR}"
+  else
+    CADDY_STATUS="${RED}未在运行${NOCOLOR}"
+  fi
+  echo
+  echo -e " V2Ray 状态: $V2RAY_STATUS  /  Caddy 状态: $CADDY_STATUS"
+  echo
 }
 
 show_menu() {
@@ -288,6 +307,7 @@ show_menu() {
       config_caddy
       install_caddy_service
       install_v2ray
+      check_services_status
       break
       ;;
     2)
@@ -296,6 +316,7 @@ show_menu() {
       config_caddy
       install_caddy_service
       install_v2ray
+      check_services_status
       break
       ;;
     3)
