@@ -210,7 +210,7 @@ config_domain() {
     red "请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
     if [ -z "${DOMAIN}" ] ; then
-      red "未输入有效的域名"
+      red "输入的域名为空，重来 ..."
       continue
     fi
 
