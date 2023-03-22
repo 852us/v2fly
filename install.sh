@@ -45,6 +45,20 @@ get_pkg_cmd() {
   export PKG_CMD=${PKG_CMD:-apt}
 }
 
+update_os() {
+  echo -e "${GREEN}Updating Operating System ... ${NOCOLOR}"
+  $PKG_CMD update -y
+  $PKG_CMD upgrade -y
+}
+
+install_packages() {
+  for pkg in $PACKAGES; do
+    echo
+    echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
+    $PKG_CMD install $pkg -y
+  done
+}
+
 get_SYS_BIT() {
   SYS_BIT=$(uname -m)
   case ${SYS_BIT} in
@@ -68,21 +82,10 @@ get_SYS_BIT() {
   echo "  V2RAY_BIT: ${V2RAY_BIT}"
 }
 
-update_os() {
-  echo -e "${GREEN}Updating Operating System ... ${NOCOLOR}"
-  $PKG_CMD update -y
-  $PKG_CMD upgrade -y
-}
+install_caddy() {
+  echo
+  echo -e "${GREEN}安装Caddy ... ${NOCOLOR}"
 
-install_packages() {
-  for pkg in $PACKAGES; do
-    echo
-    echo -e "${GREEN}$PKG_CMD install $pkg -y ${NOCOLOR}"
-    $PKG_CMD install $pkg -y
-  done
-}
-
-download_caddy() {
   caddy_repos_url="https://api.github.com/repos/caddyserver/caddy/releases/latest?v=$RANDOM"
   caddy_latest_version="$(curl -s $caddy_repos_url | grep 'tag_name' | awk -F '"' '{print $4}')"
   caddy_latest_version_number=${caddy_latest_version/v/}
@@ -120,13 +123,10 @@ download_caddy() {
   fi
 }
 
-install_caddy() {
+install_v2fly() {
   echo
-  echo -e "${GREEN}安装Caddy ... ${NOCOLOR}"
-  download_caddy
-}
+  echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
 
-download_v2fly() {
   v2ray_repos_url="https://api.github.com/repos/v2fly/v2ray-core/releases/latest?v=$RANDOM"
   v2ray_latest_version=$(curl -s $v2ray_repos_url | grep 'tag_name' | awk -F \" '{print $4}')
   v2ray_latest_version_number=${v2ray_latest_version/v/}
@@ -153,12 +153,6 @@ download_v2fly() {
   unzip -o $v2ray_tmp_file -d ${v2fly_path}
   chmod +x ${v2fly_path}/v2ray
   cp ${v2fly_path}/v2ray /usr/bin/v2ray
-}
-
-install_v2fly() {
-  echo
-  echo -e "${GREEN}安装V2Ray ... ${NOCOLOR}"
-  download_v2fly
 }
 
 main() {
