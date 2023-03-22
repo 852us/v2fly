@@ -22,8 +22,8 @@ V2RAY_LOG_PATH="/var/log/v2ray"
 V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
 
 MAGIC_URL="852us.com"
-DOMAIN="852us.com"
-MASK_DOMAIN="https://www.gnu.org"
+DOMAIN=""
+FAKE_DOMAIN="https://www.gnu.org"
 FLOW_PATH="api"
 V2RAY_PORT="12345"
 PROTOCOL="vmess"
@@ -264,7 +264,7 @@ config_caddy() {
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
 ${DOMAIN} {
-  reverse_proxy ${MASK_DOMAIN} {
+  reverse_proxy ${FAKE_DOMAIN} {
     header_up Host {upstream_hostport}
     header_up X-Forwarded-Host {host}
   }
