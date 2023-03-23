@@ -487,10 +487,26 @@ uninstall() {
   show_service_status
 }
 
+get_info_from_config() {
+  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
+    return
+  fi
+  CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
+  CONFIG_ADD=${CONFIG_PS}
+  CONFIG_HOST=${CONFIG_PS}
+  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+
+  CONFIG_REMOTE_PORT="443"
+  CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
+  CONFIG_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
+  CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
+  CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
+  CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $4}')
+  CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
+}
+
 make_vmess(){
-  if [[ -f ${CADDY_CONFIG_FILE} ]] && [[ -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
-  else
     CONFIG_PS=${DOMAIN}
     CONFIG_ADD=${CONFIG_PS}
     CONFIG_HOST=${CONFIG_PS}
@@ -516,21 +532,6 @@ make_vmess(){
 "tls": "${CONFIG_TLS}"
 }
 EOF
-}
-
-get_info_from_config() {
-  CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
-  CONFIG_ADD=${CONFIG_PS}
-  CONFIG_HOST=${CONFIG_PS}
-  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
-
-  CONFIG_REMOTE_PORT="443"
-  CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
-  CONFIG_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
-  CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
-  CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
-  CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $4}')
-  CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
 }
 
 show_info() {
