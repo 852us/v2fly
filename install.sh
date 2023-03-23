@@ -270,7 +270,7 @@ config_local_port() {
     if [ -z "${LOCAL_PORT}" ]; then
       red "输入的端口号为空，重来 ..."
       continue
-    elif [ ${LOCAL_PORT} -lt 10000 ] || [ ${LOCAL_PORT} -gt 65535 ]
+    elif [ ${LOCAL_PORT} -lt 10000 ] || [ ${LOCAL_PORT} -gt 65535 ]; then
       red "输入的端口号不在10000~65535之间，重来 ..."
       continue
     fi
