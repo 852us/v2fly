@@ -301,7 +301,7 @@ EOF
 
 show_info() {
   write_proxy_config
-  if [ ${CONFIG_PROXY} = "vmess" ] ; then
+  if [ ${CONFIG_PROTOCOL} = "vmess" ] ; then
     PROXY_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
     PROXY_URL_TEXT="${PROXY_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
     PROXY_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${PROXY_CONFIG_FILE})"
@@ -318,7 +318,7 @@ show_info() {
   cat ${PROXY_CONFIG_FILE}
   echo
   echo "-------------------- V2Ray Proxy URL --------------------"
-  if [ ${CONFIG_PROXY} = "vmess" ] ; then
+  if [ "${CONFIG_PROTOCOL}" = "vmess" ] ; then
     green ${PROXY_URL_BASE64}
   else
     green ${PROXY_URL_TEXT}
