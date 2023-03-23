@@ -32,7 +32,7 @@ PROTOCOL="vmess"
 TRANSPORT="ws" # WebSocket
 UUID=$(uuidgen -r)
 LOCAL_PORT=$(shuf -i60000-65535 -n1)
-VMESS_FILE="${V2RAY_CONFIG_PATH}/vmess.json"
+PROXY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/vmess.json"
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
 _exit() {
@@ -268,7 +268,7 @@ get_info_from_config() {
   CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
 }
 
-write_vmess_file() {
+write_proxy_config() {
   if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
   else
@@ -282,7 +282,7 @@ write_vmess_file() {
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
   fi
-  cat >${VMESS_FILE} <<-EOF
+  cat >${PROXY_CONFIG_FILE} <<-EOF
 {
   "v": "2",
   "ps": "${CONFIG_PS}",
@@ -300,23 +300,29 @@ EOF
 }
 
 show_info() {
-  write_vmess_file
-  VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
-  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
-  VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
-
+  write_proxy_config
+  if [ ${CONFIG_PROXY} = "vmess" ] ; then
+    PROXY_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
+    PROXY_URL_TEXT="${PROXY_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
+    PROXY_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${PROXY_CONFIG_FILE})"
+  else
+#    vless://14d69b25-fc5a-468a-8a33-2fa6dd7b9925@kr1.gocoin.one:443?encryption=none&security=tls&type=ws&host=kr1.gocoin.one&path=/api#kr1.gocoin.one
+    PROXY_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_ID}@${CONFIG_ADD}:${CONFIG_REMOTE_PORT}?encryption=none&security=${CONFIG_TLS}"
+    PROXY_URL_TEXT="${PROXY_URL_TEXT}&host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&#${CONFIG_PS}"
+    PROXY_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${PROXY_CONFIG_FILE})"
+  fi
   echo
   echo "-------------------- 配置信息 --------------------"
   echo "协议: ${CONFIG_PROTOCOL}"
   echo "本地端口：${CONFIG_LOCAL_PORT}"
   echo "伪装域名：${CONFIG_FAKE_DOMAIN}"
-  cat ${VMESS_FILE}
+  cat ${PROXY_CONFIG_FILE}
   echo
-  echo "-------------------- V2Ray vmess URL Base 64 --------------------"
-  cyan ${VMESS_URL_BASE64}
+  echo "-------------------- V2Ray Proxy URL Base 64 --------------------"
+  cyan ${PROXY_URL_BASE64}
   echo
-  echo "-------------------- V2Ray vmess URL Text --------------------"
-  green ${VMESS_URL_TEXT}
+  echo "-------------------- V2Ray Proxy URL Text --------------------"
+  green ${PROXY_URL_TEXT}
   echo
 }
 
