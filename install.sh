@@ -410,7 +410,6 @@ config_flow_path () {
     fi
     FLOW_PATH=$(echo ${FLOW_PATH} | sed 's|/*$||g' | sed 's|^/*||g')
     FLOW_PATH="/${FLOW_PATH}"
-    echo ${FLOW_PATH}
     break
   done
   echo
