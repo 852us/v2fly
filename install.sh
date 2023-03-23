@@ -500,6 +500,19 @@ make_vmess(){
     VMESS_NET=${TRANSPORT}
     VMESS_TLS="tls"
   fi
+  VMESS_INFO='{
+"v": "2",
+"ps": "${VMESS_PS}",
+"add": "${VMESS_ADD}",
+"port": "${VMESS_PORT}",
+"id": "${VMESS_ID}",
+"aid": "${VMESS_AID}",
+"net": "${VMESS_NET}",
+"type": "none",
+"host": "${VMESS_HOST}",
+"path": "${VMESS_PATH}",
+"tls": "${VMESS_TLS}"
+}'
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
@@ -541,7 +554,8 @@ show_info() {
 
   echo
   echo "-------------------- 配置信息 --------------------"
-  cat ${VMESS_FILE}
+#  cat ${VMESS_FILE}
+  echo ${VMESS_INFO}
   echo
   echo "-------------------- V2Ray vmess URL Base 64 --------------------"
   cyan ${VMESS_URL_BASE64}
