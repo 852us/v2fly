@@ -246,7 +246,7 @@ get_info_from_config() {
   CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
   CONFIG_ADD=${CONFIG_PS}
   CONFIG_HOST=${CONFIG_PS}
-  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+  CONFIG_FLOW_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
 
   CONFIG_REMOTE_PORT="443"
   CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
@@ -264,7 +264,7 @@ make_vmess() {
     CONFIG_PS=${DOMAIN}
     CONFIG_ADD=${CONFIG_PS}
     CONFIG_HOST=${CONFIG_PS}
-    CONFIG_PATH=${FLOW_PATH}
+    CONFIG_FLOW_PATH=${FLOW_PATH}
     CONFIG_REMOTE_PORT=443
     CONFIG_ID=${UUID}
     CONFIG_AID=0
@@ -282,7 +282,7 @@ make_vmess() {
 "net": "${CONFIG_NET}",
 "type": "none",
 "host": "${CONFIG_HOST}",
-"path": "${CONFIG_PATH}",
+"path": "${CONFIG_FLOW_PATH}",
 "tls": "${CONFIG_TLS}"
 }
 EOF
@@ -291,7 +291,7 @@ EOF
 show_info() {
   make_vmess
   VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
-  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
+  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
   VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
 
   echo
@@ -347,25 +347,29 @@ config_local_port() {
     else
       echo
       green "输入了有效的端口号：${LOCAL_PORT} "
+      CONFIG_LOCAL_PORT=${LOCAL_PORT}
       break
     fi
   done
 }
 
 write_caddy_config() {
-  if [[ -d ${CADDY_CONFIG_PATH} ]]; then
-    rm -rf ${CADDY_CONFIG_PATH}
-  fi
-  mkdir -p ${CADDY_CONFIG_PATH}/sites
+  [[ ! -d ${CADDY_CONFIG_PATH}/sites ]] && mkdir -p ${CADDY_CONFIG_PATH}/sites
+
+  [ -z ${CONFIG_HOST} ] && CONFIG_HOST=${DOMAIN}
+  [ -z ${CONFIG_FAKE_DOMAIN} ] && CONFIG_FAKE_DOMAIN=${FAKE_DOMAIN}
+  [ -z ${CONFIG_LOCAL_PORT} ] && CONFIG_LOCAL_PORT=${LOCAL_PORT}
+
+  CONFIG_FLOW_PATH=${FLOW_PATH}
 
   cat >${CADDY_CONFIG_FILE} <<-EOF
-${DOMAIN} {
-  reverse_proxy ${FAKE_DOMAIN} {
+${CONFIG_HOST} {
+  reverse_proxy ${CONFIG_FAKE_DOMAIN} {
     header_up Host {upstream_hostport}
     header_up X-Forwarded-Host {host}
   }
-  handle_path ${FLOW_PATH} {
-    reverse_proxy 127.0.0.1:${LOCAL_PORT}
+  handle_path ${CONFIG_FLOW_PATH} {
+    reverse_proxy 127.0.0.1:${CONFIG_LOCAL_PORT}
   }
 }
 import sites/*
