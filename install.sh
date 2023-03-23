@@ -380,7 +380,7 @@ config_fake_doamin () {
     break
   done
   echo
-  green "输入了有效的域名：${FAKE_DOMAIN} "
+  green "有效域名：${FAKE_DOMAIN} "
   CONFIG_FAKE_MAIN=${FAKE_DOMAIN}
 }
 
