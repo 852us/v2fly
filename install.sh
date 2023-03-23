@@ -26,10 +26,10 @@ MAGIC_URL="852us.com"
 DOMAIN="852us.com"
 FAKE_DOMAIN="https://www.gnu.org"
 FLOW_PATH="/api"
-V2RAY_PORT=$(shuf -i60000-65535 -n1)
 PROTOCOL="vmess"
 TRANSPORT="ws" # WebSocket
 UUID=$(uuidgen -r)
+LOCAL_PORT=$(shuf -i60000-65535 -n1)
 VMESS_FILE="${V2RAY_CONFIG_PATH}/vmess.json"
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
@@ -262,6 +262,23 @@ config_domain() {
   done
 }
 
+config_local_port() {
+  while :; do
+    echo
+    red "请输入一个本地端口号："
+    read -p "端口号要求(10000~65535之间): " LOCAL_PORT
+    if [ -z "${LOCAL_PORT}" ]; then
+      red "输入的端口号为空，重来 ..."
+      continue
+    elif [ ${LOCAL_PORT} -lt 10000 ] || [ ${LOCAL_PORT} -gt 65535 ]
+      red "输入的端口号不在10000~65535之间，重来 ..."
+    fi
+
+    echo
+    green "输入了有效的端口号：${LOCAL_PORT} "
+  done
+}
+
 write_caddy_config() {
   if [[ -d ${CADDY_CONFIG_PATH} ]]; then
     rm -rf ${CADDY_CONFIG_PATH}
@@ -275,7 +292,7 @@ ${DOMAIN} {
     header_up X-Forwarded-Host {host}
   }
   handle_path ${FLOW_PATH} {
-    reverse_proxy 127.0.0.1:${V2RAY_PORT}
+    reverse_proxy 127.0.0.1:${LOCAL_PORT}
   }
 }
 import sites/*
@@ -286,7 +303,7 @@ EOF
 write_v2ray_config() {
   [[ ! -d ${V2RAY_CONFIG_PATH} ]] && mkdir -p ${V2RAY_CONFIG_PATH}
 
-  [ -z ${CONFIG_LOCAL_PORT} ] && CONFIG_LOCAL_PORT=${V2RAY_PORT}
+  [ -z ${CONFIG_LOCAL_PORT} ] && CONFIG_LOCAL_PORT=${LOCAL_PORT}
   [ -z ${CONFIG_ID} ] && CONFIG_ID=${UUID}
   [ -z ${CONFIG_NET} ] && CONFIG_NET="ws"
   [ -z ${CONFIG_PROTOCOL} ] && CONFIG_PROTOCOL=${PROTOCOL}
@@ -557,6 +574,18 @@ show_info() {
   echo
 }
 
+reconfig() {
+  if [ $# -lt 2 ]; then
+    red "reconfig函数必须带参数 ..."
+  fi
+  get_info_from_config
+  $1
+  write_caddy_config
+  write_v2ray_config
+  restart_services
+  show_info
+}
+
 show_config_menu() {
   while :; do
     echo
@@ -573,14 +602,10 @@ show_config_menu() {
     read -p "$(echo 请选择[1-4]:)" choose
     case $choose in
     1)
-      get_info_from_config
-      config_domain
-      write_caddy_config
-      write_v2ray_config
-      restart_services
-      show_info
+      reconfig config_domain
       break ;;
     2)
+      reconfig config_local_port
       break  ;;
     3)
       break  ;;
