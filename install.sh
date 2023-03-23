@@ -298,6 +298,7 @@ show_info() {
   echo "-------------------- 配置信息 --------------------"
   echo "协议: ${CONFIG_PROTOCOL}"
   echo "本地端口：${CONFIG_LOCAL_PORT}"
+  echo "伪装域名：${CONFIG_FAKE_DOMAIN}"
   cat ${VMESS_FILE}
   echo
   echo "-------------------- V2Ray vmess URL Base 64 --------------------"
