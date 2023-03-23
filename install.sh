@@ -356,6 +356,12 @@ config_local_port() {
   done
 }
 
+config_id () {
+  get_info_from_config
+  CONFIG_ID=${UUID}
+  green "ID自动更改为：${CONFIG_ID}"
+}
+
 write_caddy_config() {
   [[ ! -d ${CADDY_CONFIG_PATH}/sites ]] && mkdir -p ${CADDY_CONFIG_PATH}/sites
 
@@ -621,6 +627,8 @@ show_config_menu() {
       break
       ;;
     4)
+      config_id
+      reconfig
       break
       ;;
     *)
