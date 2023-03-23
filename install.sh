@@ -500,19 +500,19 @@ make_vmess(){
     VMESS_NET=${TRANSPORT}
     VMESS_TLS="tls"
   fi
-  VMESS_INFO='{
-"v": "2",
-"ps": "${VMESS_PS}",
-"add": "${VMESS_ADD}",
-"port": "${VMESS_PORT}",
-"id": "${VMESS_ID}",
-"aid": "${VMESS_AID}",
-"net": "${VMESS_NET}",
-"type": "none",
-"host": "${VMESS_HOST}",
-"path": "${VMESS_PATH}",
+  VMESS_INFO='{\n
+"v": "2",\n
+"ps": "${VMESS_PS}",\n
+"add": "${VMESS_ADD}",\n
+"port": "${VMESS_PORT}",\n
+"id": "${VMESS_ID}",\n
+"aid": "${VMESS_AID}",\n
+"net": "${VMESS_NET}",\n
+"type": "none",\n
+"host": "${VMESS_HOST}",\n
+"path": "${VMESS_PATH}",\n
 "tls": "${VMESS_TLS}"
-}'
+}\n'
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
