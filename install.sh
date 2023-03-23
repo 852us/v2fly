@@ -613,6 +613,7 @@ config() {
 
 install() {
   get_SYS_BIT
+  install_v2fly
   install_caddy
   install_v2ray
   config
