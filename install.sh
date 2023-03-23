@@ -411,7 +411,7 @@ EOF
 install_v2ray_service() {
   echo
   green "V2Ray服务安装进行中 ..."
-  if [[ -d ${V2RAY_LOG_PATH} ]] ; then
+  if [[ -d ${V2RAY_LOG_PATH} ]]; then
     rm -rf ${V2RAY_LOG_PATH}
   fi
   mkdir -p ${V2RAY_LOG_PATH}
@@ -527,7 +527,7 @@ get_info_from_config() {
   CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
 }
 
-make_vmess(){
+make_vmess() {
   if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
   else
@@ -603,17 +603,22 @@ show_config_menu() {
     1)
       config_domain
       reconfig
-      break ;;
+      break
+      ;;
     2)
+      break
+      ;;
+    3)
       config_local_port
       reconfig
-      break  ;;
-    3)
-      break  ;;
+      break
+      ;;
     4)
-      break  ;;
+      break
+      ;;
     *)
-      error  ;;
+      error
+      ;;
     esac
   done
   echo
@@ -641,24 +646,31 @@ show_main_menu() {
     1)
       prepare_system
       install
-      break ;;
+      break
+      ;;
     2)
       install
-      break  ;;
+      break
+      ;;
     3)
       uninstall
-      break  ;;
+      break
+      ;;
     4)
       restart_services
-      break  ;;
+      break
+      ;;
     5)
       show_info
-      break  ;;
+      break
+      ;;
     6)
       show_config_menu
-      break  ;;
+      break
+      ;;
     *)
-      error  ;;
+      error
+      ;;
     esac
   done
   echo
@@ -691,24 +703,33 @@ main() {
   [ -z $1 ] && args="menu"
   case $args in
   c | config)
-    show_config_menu;;
+    show_config_menu
+    ;;
   i | install)
-    install;;
+    install
+    ;;
   I | install_all)
     prepare_system
-    install;;
+    install
+    ;;
   l | link)
-    show_info;;
+    show_info
+    ;;
   m | menu)
-    show_main_menu;;
+    show_main_menu
+    ;;
   r | restart)
-    restart_services;;
+    restart_services
+    ;;
   s | status)
-    show_service_status;;
+    show_service_status
+    ;;
   u | uninstall)
-    uninstall;;
+    uninstall
+    ;;
   h | help | *)
-    show_help $0;;
+    show_help $0
+    ;;
   esac
 }
 
