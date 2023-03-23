@@ -358,8 +358,30 @@ config_local_port() {
 
 config_id () {
   get_info_from_config
-  green "ID从${CONFIG_ID}更改为：${UUID}"
+  green "ID从  ${CONFIG_ID}  更改为  ${UUID}"
   CONFIG_ID=${UUID}
+}
+
+config_fake_doamin () {
+  get_info_from_config
+    while :; do
+    echo
+    red "请输入新的伪装域名："
+    read -p "必须是有效的域名(如：https://www.gnu.org): " FAKE_DOMAIN
+    if [ -z "${FAKE_DOMAIN}" ]; then
+      red "输入的伪装域名为空，重来 ..."
+      continue
+    fi
+    curl -s ${FAKE_DOMAIN} 2>1 >/dev/null
+    if [ ! $? ]; then
+      red "输入的端伪装域名无效，重来 ..."
+      continue
+    fi
+    break
+  done
+  echo
+  green "输入了有效的域名：${FAKE_DOMAIN} "
+  CONFIG_FAKE_MAIN=${FAKE_DOMAIN}
 }
 
 write_caddy_config() {
@@ -611,24 +633,34 @@ show_config_menu() {
     echo
     green " 4. 修改ID"
     echo
-    read -p "$(echo 请选择[1-4]:)" choose
+    green " 5. 修改ID"
+    echo
+    green " 6. 修改ID"
+    echo
+    read -p "$(echo 请选择[1-6]:)" choose
     case $choose in
     1)
       config_domain
-      reconfig
       break
       ;;
     2)
+      config_protocol
       break
       ;;
     3)
       config_local_port
-      reconfig
       break
       ;;
     4)
       config_id
-      reconfig
+      break
+      ;;
+    5)
+      config_fake_doamin
+      break
+      ;;
+    6)
+      config_flow_path
       break
       ;;
     *)
@@ -636,6 +668,7 @@ show_config_menu() {
       ;;
     esac
   done
+  reconfig
   echo
 }
 
