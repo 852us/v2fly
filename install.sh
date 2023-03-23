@@ -247,6 +247,7 @@ get_info_from_config() {
   CONFIG_ADD=${CONFIG_PS}
   CONFIG_HOST=${CONFIG_PS}
   CONFIG_FLOW_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+  CONFIG_FAKE_DOMAIN=$(awk -F ' ' '/reverse_proxy/{print $2}' ${CADDY_CONFIG_FILE} | head -n1)
 
   CONFIG_REMOTE_PORT="443"
   CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
@@ -373,7 +374,9 @@ config_fake_doamin () {
       red "输入的伪装域名为空，重来 ..."
       continue
     fi
+
     [ -z $(echo ${FAKE_DOMAIN} | grep http) ] && FAKE_DOMAIN="https://${FAKE_DOMAIN}"
+    FAKE_DOMAIN=$(echo ${FAKE_DOMAIN) | sed 's|/$||') # 去除末尾可能存在的'/'字符，保证Caddy正常运行
     if [ $(curl -s -o /dev/null -w %{http_code} ${FAKE_DOMAIN}) -ne 200 ]; then
       red "输入的端伪装域名无效，重来 ..."
       continue
@@ -382,7 +385,7 @@ config_fake_doamin () {
   done
   echo
   green "有效域名：${FAKE_DOMAIN} "
-  CONFIG_FAKE_MAIN=${FAKE_DOMAIN}
+  CONFIG_FAKE_DOMAIN=${FAKE_DOMAIN}
 }
 
 write_caddy_config() {
