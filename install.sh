@@ -526,16 +526,16 @@ get_info_from_vmess() {
 #  VMESS_HOST=$(awk -F '"' '/"host"/{print $4}' ${VMESS_FILE})
 #  VMESS_PATH=$(awk -F '"' '/"path"/{print $4}' ${VMESS_FILE})
 #  VMESS_TLS=$(awk -F '"' '/"tls"/{print $4}' ${VMESS_FILE})
-  VMESS_PS="$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')"
+  VMESS_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
   VMESS_ADD=${VMESS_PS}
   VMESS_HOST=${VMESS_PS}
   VMESS_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
 
   VMESS_PORT="443"
-  VMESS_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"id"/{print $2}')
-  VMESS_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"alterId"/{print $2}')
-  VMESS_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"network"/{print $2}')
-  VMESS_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"tls"/{print $1}')
+  VMESS_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
+  VMESS_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
+  VMESS_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
+  VMESS_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
 }
 
 show_info() {
