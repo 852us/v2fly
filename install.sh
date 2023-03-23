@@ -408,8 +408,9 @@ config_flow_path () {
       red "输入的伪装域名为空，重来 ..."
       continue
     fi
-    FLOW_PATH=$(echo ${FLOW_PATH} | sed 's|/$||g' | sed 's|^/||g')
+    FLOW_PATH=$(echo ${FLOW_PATH} | sed 's|/*$||g' | sed 's|^/*||g')
     FLOW_PATH="/${FLOW_PATH}"
+    echo ${FLOW_PATH}
     break
   done
   echo
