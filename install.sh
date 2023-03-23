@@ -344,6 +344,7 @@ config() {
     config_domain
     config_caddy
     config_v2ray
+    install_services
   fi
 }
 
@@ -475,7 +476,6 @@ install() {
   install_caddy
   install_v2ray
   config
-  install_services
   show_service_status
   show_info
 }
