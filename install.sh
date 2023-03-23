@@ -569,6 +569,7 @@ show_config_menu() {
       write_caddy_config
       write_v2ray_config
       restart_services
+      show_info
       break ;;
     2)
       break  ;;
