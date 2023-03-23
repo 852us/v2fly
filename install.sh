@@ -43,15 +43,15 @@ error() {
 }
 
 green() {
-  echo -e "${GREEN}$@ ${NOCOLOR}"
+  echo -e "${GREEN}$@${NOCOLOR}"
 }
 
 red() {
-  echo -e "${RED}$@ ${NOCOLOR}"
+  echo -e "${RED}$@${NOCOLOR}"
 }
 
 cyan() {
-  echo -e "${CYAN}$@ ${NOCOLOR}"
+  echo -e "${CYAN}$@${NOCOLOR}"
 }
 
 verify_root_user() {
@@ -488,17 +488,17 @@ uninstall() {
 make_vmess(){
   cat >${VMESS_FILE} <<-EOF
 {
-"v":"2",
-"ps":"${DOMAIN}",
-"add":"${DOMAIN}",
-"port":"443",
-"id":"${UUID}",
-"aid":"0",
-"net":"${TRANSPORT}",
-"type":"none",
-"host":"${DOMAIN}",
-"path":"${FLOW_PATH}",
-"tls":"tls"
+"v": "2",
+"ps": "${DOMAIN}",
+"add": "${DOMAIN}",
+"port": "443",
+"id": "${UUID}",
+"aid": "0",
+"net": "${TRANSPORT}",
+"type": "none",
+"host": "${DOMAIN}",
+"path": "${FLOW_PATH}",
+"tls": "tls"
 }
 EOF
 }
