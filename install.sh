@@ -340,10 +340,11 @@ EOF
 }
 
 config() {
-  config_domain
-  config_caddy
-  config_v2ray
-  make_vmess
+  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
+    config_domain
+    config_caddy
+    config_v2ray
+  fi
 }
 
 install_caddy_service() {
