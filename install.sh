@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v0.0.1"
+VERSION="v0.1.0"
 RED='\e[91m'
 GREEN='\e[92m'
 CYAN='\e[96m'
