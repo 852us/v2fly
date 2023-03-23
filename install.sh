@@ -22,6 +22,7 @@ V2RAY_CONFIG_PATH="/etc/v2ray"
 V2RAY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/config.json"
 V2RAY_LOG_PATH="/var/log/v2ray"
 V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
+V2FLY_VERSION="$(awk -F '[="]' '/^VERSION/{print $3}' ${V2FLY})"
 
 MAGIC_URL="852us.com"
 DOMAIN="852us.com"
@@ -127,8 +128,6 @@ set_timezone() {
 
 install_v2fly() {
   V2FLY_URL="https://raw.githubusercontent.com/852us/v2fly/main/install.sh"
-  echo
-  echo "安装v2fly安装脚本 ..."
   curl -s ${V2FLY_URL} > ${V2FLY}
   chmod +x ${V2FLY}
 }
