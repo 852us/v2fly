@@ -23,7 +23,7 @@ V2RAY_LOG_PATH="/var/log/v2ray"
 V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
 
 MAGIC_URL="852us.com"
-DOMAIN=""
+DOMAIN="852us.com"
 FAKE_DOMAIN="https://www.gnu.org"
 FLOW_PATH="/api"
 V2RAY_PORT=$(shuf -i60000-65535 -n1)
@@ -284,10 +284,11 @@ EOF
 }
 
 write_v2ray_config() {
-  if [[ -d ${V2RAY_CONFIG_PATH} ]]; then
-    rm -rf ${V2RAY_CONFIG_PATH}
-  fi
-  mkdir -p ${V2RAY_CONFIG_PATH}
+  [[ ! -d ${V2RAY_CONFIG_PATH} ]] && mkdir -p ${V2RAY_CONFIG_PATH}
+
+  [ -z ${CONFIG_LOCAL_PORT} ] && CONFIG_LOCAL_PORT=${V2RAY_PORT}
+  [ -z ${CONFIG_ID} ] && CONFIG_ID=${UUID}
+  [ -z ${CONFIG_NET} ] && CONFIG_NET="ws"
 
   cat >${V2RAY_CONFIG_FILE} <<-EOF
 {
@@ -298,19 +299,19 @@ write_v2ray_config() {
   },
   "inbounds": [
     {
-      "port": ${V2RAY_PORT},
+      "port": ${CONFIG_LOCAL_PORT},
       "protocol": "${PROTOCOL}",
       "settings": {
         "clients": [
           {
-            "id": "${UUID}",
+            "id": "${CONFIG_ID}",
             "level": 1,
             "alterId": 0
           }
         ]
       },
       "streamSettings": {
-        "network": "ws"
+        "network": "${CONFIG_NET}"
       },
       "sniffing": {
         "enabled": true,
@@ -488,52 +489,53 @@ uninstall() {
 
 make_vmess(){
   if [[ -f ${CADDY_CONFIG_FILE} ]] && [[ -f ${V2RAY_CONFIG_FILE} ]]; then
-    get_info_from_vmess
+    get_info_from_config
   else
-    VMESS_PS=${DOMAIN}
-    VMESS_ADD=${VMESS_PS}
-    VMESS_HOST=${VMESS_PS}
-    VMESS_PATH=${FLOW_PATH}
-    VMESS_PORT=443
-    VMESS_ID=${UUID}
-    VMESS_AID=0
-    VMESS_NET=${TRANSPORT}
-    VMESS_TLS="tls"
+    CONFIG_PS=${DOMAIN}
+    CONFIG_ADD=${CONFIG_PS}
+    CONFIG_HOST=${CONFIG_PS}
+    CONFIG_PATH=${FLOW_PATH}
+    CONFIG_REMOTE_PORT=443
+    CONFIG_ID=${UUID}
+    CONFIG_AID=0
+    CONFIG_NET=${TRANSPORT}
+    CONFIG_TLS="tls"
   fi
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
-"ps": "${VMESS_PS}",
-"add": "${VMESS_ADD}",
-"port": "${VMESS_PORT}",
-"id": "${VMESS_ID}",
-"aid": "${VMESS_AID}",
-"net": "${VMESS_NET}",
+"ps": "${CONFIG_PS}",
+"add": "${CONFIG_ADD}",
+"port": "${CONFIG_REMOTE_PORT}",
+"id": "${CONFIG_ID}",
+"aid": "${CONFIG_AID}",
+"net": "${CONFIG_NET}",
 "type": "none",
-"host": "${VMESS_HOST}",
-"path": "${VMESS_PATH}",
-"tls": "${VMESS_TLS}"
+"host": "${CONFIG_HOST}",
+"path": "${CONFIG_PATH}",
+"tls": "${CONFIG_TLS}"
 }
 EOF
 }
 
-get_info_from_vmess() {
-  VMESS_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
-  VMESS_ADD=${VMESS_PS}
-  VMESS_HOST=${VMESS_PS}
-  VMESS_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+get_info_from_config() {
+  CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
+  CONFIG_ADD=${CONFIG_PS}
+  CONFIG_HOST=${CONFIG_PS}
+  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
 
-  VMESS_PORT="443"
-  VMESS_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
-  VMESS_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
-  VMESS_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
-  VMESS_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
+  CONFIG_REMOTE_PORT="443"
+  CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
+  CONFIG_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
+  CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
+  CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
+  CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $4}')
 }
 
 show_info() {
   make_vmess
-  VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${VMESS_HOST}:${VMESS_PORT}"
-  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
+  VMESS_URL_TEXT="vmess://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
+  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
   VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
 
   echo
@@ -564,7 +566,7 @@ show_config_menu() {
     read -p "$(echo 请选择[1-4]:)" choose
     case $choose in
     1)
-      get_info_from_vmess
+      get_info_from_config
       config_domain
       write_caddy_config
       write_v2ray_config
