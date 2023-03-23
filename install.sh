@@ -711,6 +711,7 @@ show_main_menu() {
       break
       ;;
     2)
+      install_v2fly
       install
       break
       ;;
