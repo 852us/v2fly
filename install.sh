@@ -272,6 +272,7 @@ config_local_port() {
       continue
     elif [ ${LOCAL_PORT} -lt 10000 ] || [ ${LOCAL_PORT} -gt 65535 ]
       red "输入的端口号不在10000~65535之间，重来 ..."
+      continue
     fi
 
     echo
