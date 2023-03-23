@@ -496,8 +496,10 @@ write_v2ray_config() {
             "level": 1,
             "alterId": 0
           }
-        ]
+        ],
+        "decryption": "none"
       },
+      "listen": "127.0.0.1",
       "streamSettings": {
         "network": "${CONFIG_NET}"
       },
