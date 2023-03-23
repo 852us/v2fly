@@ -517,15 +517,6 @@ EOF
 }
 
 get_info_from_vmess() {
-#  VMESS_PS=$(awk -F '"' '/"ps"/{print $4}' ${VMESS_FILE})
-#  VMESS_ADD=$(awk -F '"' '/"add"/{print $4}' ${VMESS_FILE})
-#  VMESS_PORT=$(awk -F '"' '/"port"/{print $4}' ${VMESS_FILE})
-#  VMESS_ID=$(awk -F '"' '/"id"/{print $4}' ${VMESS_FILE})
-#  VMESS_AID=$(awk -F '"' '/"aid"/{print $4}' ${VMESS_FILE})
-#  VMESS_NET=$(awk -F '"' '/"net"/{print $4}' ${VMESS_FILE})
-#  VMESS_HOST=$(awk -F '"' '/"host"/{print $4}' ${VMESS_FILE})
-#  VMESS_PATH=$(awk -F '"' '/"path"/{print $4}' ${VMESS_FILE})
-#  VMESS_TLS=$(awk -F '"' '/"tls"/{print $4}' ${VMESS_FILE})
   VMESS_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
   VMESS_ADD=${VMESS_PS}
   VMESS_HOST=${VMESS_PS}
@@ -540,7 +531,6 @@ get_info_from_vmess() {
 
 show_info() {
   if [[ ! -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
-    red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在，重新生成 ..."
     make_vmess
   fi
   get_info_from_vmess
@@ -614,7 +604,7 @@ show_help() {
 
   $0 I | install_all: 更新操作系统、安装必要模块、安装 V2Ray与Caddy
 
-  $0 info: 显示客户端连接信息
+  $0 l | link: 显示客户端连接信息
 
   $0 m | menu: 管理 V2Ray (同等于直接输入 $0)
 
@@ -638,7 +628,7 @@ main() {
     prepare_system
     install
     ;;
-  info)
+  l | link)
     show_info
     ;;
   m | menu)
