@@ -372,6 +372,7 @@ config_fake_doamin () {
       red "输入的伪装域名为空，重来 ..."
       continue
     fi
+    [ -z $(echo ${FAKE_DOMAIN} | grep http) ] && FAKE_DOMAIN="https://${FAKE_DOMAIN}"
     if [ $(curl -s -o /dev/null -w %{http_code} ${FAKE_DOMAIN}) -ne 200 ]; then
       red "输入的端伪装域名无效，重来 ..."
       continue
