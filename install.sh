@@ -242,7 +242,7 @@ uninstall_v2ray() {
 config_domain() {
   while :; do
     echo
-    red "请输入一个已经通过DNS解析到当前主机IP(${IP})的域名！"
+    red "请输入一个已经通过DNS解析到当前主机IP: ${LOCAL_IP}的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
     if [ -z "${DOMAIN}" ]; then
       red "输入的域名为空，重来 ..."
