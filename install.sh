@@ -488,17 +488,17 @@ uninstall() {
 make_vmess(){
   cat >${VMESS_FILE} <<-EOF
 {
-  "v": "2",
-  "ps": "${DOMAIN}",
-  "add": "${DOMAIN}",
-  "port": "443",
-  "id": "${UUID}",
-  "aid": "0",
-  "net": "${TRANSPORT}",
-  "type": "none",
-  "host": "${DOMAIN}",
-  "path": "${FLOW_PATH}",
-  "tls": "tls"
+"v": "2",
+"ps": "${DOMAIN}",
+"add": "${DOMAIN}",
+"port": "443",
+"id": "${UUID}",
+"aid": "0",
+"net": "${TRANSPORT}",
+"type": "none",
+"host": "${DOMAIN}",
+"path": "${FLOW_PATH}",
+"tls": "tls"
 }
 EOF
 }
