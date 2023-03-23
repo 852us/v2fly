@@ -306,9 +306,8 @@ show_info() {
     PROXY_URL_TEXT="${PROXY_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
     PROXY_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${PROXY_CONFIG_FILE})"
   else
-#vless://14d69b25-fc5a-468a-8a33-2fa6dd7b9925@kr1.gocoin.one:443?encryption=none&security=tls&type=ws&host=kr1.gocoin.one&path=/api#kr1.gocoin.one
     PROXY_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_ID}@${CONFIG_ADD}:${CONFIG_REMOTE_PORT}?encryption=none&security=${CONFIG_TLS}"
-    PROXY_URL_TEXT="${PROXY_URL_TEXT}&type=${CONFIG_NET}&host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&#${CONFIG_PS}"
+    PROXY_URL_TEXT="${PROXY_URL_TEXT}&type=${CONFIG_NET}&host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}#${CONFIG_PS}"
     PROXY_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${PROXY_CONFIG_FILE})"
   fi
   echo
