@@ -247,7 +247,7 @@ get_info_from_config() {
   CONFIG_ADD=${CONFIG_PS}
   CONFIG_HOST=${CONFIG_PS}
   CONFIG_FLOW_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
-#  CONFIG_FAKE_DOMAIN=$(awk -F ' ' '/reverse_proxy/{print $2}' ${CADDY_CONFIG_FILE} | head -n1)
+  CONFIG_FAKE_DOMAIN=$(awk -F ' ' '/reverse_proxy/{print $2}' ${CADDY_CONFIG_FILE} | head -n1)
 
   CONFIG_REMOTE_PORT="443"
   CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
