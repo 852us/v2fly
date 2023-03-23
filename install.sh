@@ -327,6 +327,9 @@ config_domain() {
       continue
     else
       green "${DOMAIN}(${DOMAIN_IP})，本地IP(${LOCAL_IP})，输入的域名已正确解析到当前主机 ... "
+      CONFIG_PS=${DOMAIN}
+      CONFIG_ADD=${CONFIG_PS}
+      CONFIG_HOST=${CONFIG_PS}
       break
     fi
   done
