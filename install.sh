@@ -240,6 +240,7 @@ uninstall_v2ray() {
 }
 
 config_domain() {
+  get_info_from_config
   while :; do
     echo
     red "请输入一个已经通过DNS解析到当前主机IP(${LOCAL_IP})的域名！"
@@ -263,6 +264,7 @@ config_domain() {
 }
 
 config_local_port() {
+  get_info_from_config
   while :; do
     echo
     red "请输入一个本地端口号："
@@ -577,11 +579,6 @@ show_info() {
 }
 
 reconfig() {
-  if [ $# -lt 2 ]; then
-    red "reconfig函数必须带参数 ..."
-  fi
-  get_info_from_config
-  $1
   write_caddy_config
   write_v2ray_config
   restart_services
@@ -604,10 +601,12 @@ show_config_menu() {
     read -p "$(echo 请选择[1-4]:)" choose
     case $choose in
     1)
-      reconfig config_domain
+      config_domain
+      reconfig
       break ;;
     2)
-      reconfig config_local_port
+      config_local_port
+      reconfig
       break  ;;
     3)
       break  ;;
