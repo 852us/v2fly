@@ -530,6 +530,7 @@ get_info_from_config() {
   CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
   CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
   CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $4}')
+  CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
 }
 
 show_info() {
@@ -540,6 +541,8 @@ show_info() {
 
   echo
   echo "-------------------- 配置信息 --------------------"
+  echo "协议: ${CONFIG_PROTOCOL}"
+  echo "本地端口：${CONFIG_LOCAL_PORT}"
   cat ${VMESS_FILE}
   echo
   echo "-------------------- V2Ray vmess URL Base 64 --------------------"
