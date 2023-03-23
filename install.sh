@@ -12,6 +12,7 @@ V2RAY_BIT=""
 CADDY_ARCH=""
 PACKAGES="curl git wget unzip"
 V2FLY_PATH="/usr/local/bin/v2fly"
+V2FLY="/usr/bin/v2fly"
 V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
@@ -122,6 +123,12 @@ set_timezone() {
   timedatectl set-ntp true
   green "已将你的主机设置为Asia/Shanghai时区并通过systemd-timesyncd自动同步时间。"
   echo
+}
+
+install_v2fly() {
+  echo
+  echo "安装v2fly安装脚本 ..."
+
 }
 
 install_caddy() {
