@@ -38,10 +38,6 @@ _exit() {
   exit $@
 }
 
-error() {
-  red "输入错误，请重新输入正确的内容 ..."
-}
-
 green() {
   echo -e "${GREEN}$@${NOCOLOR}"
 }
@@ -52,6 +48,10 @@ red() {
 
 cyan() {
   echo -e "${CYAN}$@${NOCOLOR}"
+}
+
+error() {
+  red "输入错误，请重新输入正确的内容 ..."
 }
 
 verify_root_user() {
@@ -242,7 +242,7 @@ uninstall_v2ray() {
 config_domain() {
   while :; do
     echo
-    red "请输入一个已经通过DNS解析到当前主机IP：${IP}的域名！"
+    red "请输入一个已经通过DNS解析到当前主机IP(${IP})的域名！"
     read -p "(例如：${MAGIC_URL}): " DOMAIN
     if [ -z "${DOMAIN}" ]; then
       red "输入的域名为空，重来 ..."
@@ -253,10 +253,10 @@ config_domain() {
     green "输入的域名：${DOMAIN} "
     DOMAIN_IP=$(dig ${DOMAIN} | grep "^${DOMAIN}" | awk '{print $5}')
     if [[ "${DOMAIN_IP}" != "${LOCAL_IP}" ]]; then
-      red "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名未正确解析到当前主机 ... "
+      red "${DOMAIN}(${DOMAIN_IP})，本地IP(${LOCAL_IP})，输入的域名未正确解析到当前主机 ... "
       continue
     else
-      green "${DOMAIN}: ${DOMAIN_IP}，本地IP：${LOCAL_IP}，输入的域名已正确解析到当前主机 ... "
+      green "${DOMAIN}(${DOMAIN_IP})，本地IP(${LOCAL_IP})，输入的域名已正确解析到当前主机 ... "
       break
     fi
   done
@@ -289,6 +289,7 @@ write_v2ray_config() {
   [ -z ${CONFIG_LOCAL_PORT} ] && CONFIG_LOCAL_PORT=${V2RAY_PORT}
   [ -z ${CONFIG_ID} ] && CONFIG_ID=${UUID}
   [ -z ${CONFIG_NET} ] && CONFIG_NET="ws"
+  [ -z ${CONFIG_PROTOCOL} ] && CONFIG_PROTOCOL=${PROTOCOL}
 
   cat >${V2RAY_CONFIG_FILE} <<-EOF
 {
@@ -300,7 +301,7 @@ write_v2ray_config() {
   "inbounds": [
     {
       "port": ${CONFIG_LOCAL_PORT},
-      "protocol": "${PROTOCOL}",
+      "protocol": "${CONFIG_PROTOCOL}",
       "settings": {
         "clients": [
           {
