@@ -567,6 +567,7 @@ show_config_menu() {
       get_info_from_vmess
       config_domain
       write_caddy_config
+      systemctl restart caddy
       break ;;
     2)
       break  ;;
