@@ -640,6 +640,8 @@ show_main_menu() {
 show_help() {
   green "V2Ray一键安装脚本 ...
 
+  $0 c | config: 配置V2Ray与Caddy
+
   $0 i | install: 安装 V2Ray与Caddy
 
   $0 I | install_all: 更新操作系统、安装必要模块、安装 V2Ray与Caddy
@@ -661,31 +663,25 @@ main() {
   args=$1
   [ -z $1 ] && args="menu"
   case $args in
+  c | config)
+    show_config_menu;;
   i | install)
-    install
-    ;;
+    install;;
   I | install_all)
     prepare_system
-    install
-    ;;
+    install;;
   l | link)
-    show_info
-    ;;
+    show_info;;
   m | menu)
-    show_main_menu
-    ;;
+    show_main_menu;;
   r | restart)
-    restart_services
-    ;;
+    restart_services;;
   s | status)
-    show_service_status
-    ;;
+    show_service_status;;
   u | uninstall)
-    uninstall
-    ;;
+    uninstall;;
   h | help | *)
-    show_help $0
-    ;;
+    show_help $0;;
   esac
 }
 
