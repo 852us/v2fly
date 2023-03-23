@@ -405,7 +405,7 @@ Type=simple
 User=root
 Environment="V2RAY_VMESS_AEAD_FORCED=false"
 NoNewPrivileges=true
-ExecStart=/usr/bin/env v2ray.vmess.aead.forced=false ${V2RAY} run -config ${V2RAY_CONFIG_FILE}
+ExecStart=${V2RAY} run -config ${V2RAY_CONFIG_FILE}
 Restart=on-failure
 StartLimitBurst=0
 LimitNOFILE=1048576
@@ -539,9 +539,9 @@ EOF
 
 show_info() {
   make_vmess
-  VMESS_URL_TEXT="vmess://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
+  VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
   VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
-  VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
+  VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
 
   echo
   echo "-------------------- 配置信息 --------------------"
