@@ -317,11 +317,12 @@ show_info() {
   echo "伪装域名：${CONFIG_FAKE_DOMAIN}"
   cat ${PROXY_CONFIG_FILE}
   echo
-  echo "-------------------- V2Ray Proxy URL Base 64 --------------------"
-  cyan ${PROXY_URL_BASE64}
-  echo
-  echo "-------------------- V2Ray Proxy URL Text --------------------"
-  green ${PROXY_URL_TEXT}
+  echo "-------------------- V2Ray Proxy URL --------------------"
+  if [ ${CONFIG_PROXY} = "vmess" ] ; then
+    green ${PROXY_URL_BASE64}
+  else
+    green ${PROXY_URL_TEXT}
+  fi
   echo
 }
 
