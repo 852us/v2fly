@@ -358,8 +358,8 @@ config_local_port() {
 
 config_id () {
   get_info_from_config
+  green "ID从${CONFIG_ID}更改为：${UUID}"
   CONFIG_ID=${UUID}
-  green "ID自动更改为：${CONFIG_ID}"
 }
 
 write_caddy_config() {
