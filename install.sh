@@ -258,7 +258,7 @@ get_info_from_config() {
   CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
 }
 
-make_vmess() {
+write_vmess_file() {
   if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
   else
@@ -274,23 +274,23 @@ make_vmess() {
   fi
   cat >${VMESS_FILE} <<-EOF
 {
-"v": "2",
-"ps": "${CONFIG_PS}",
-"add": "${CONFIG_ADD}",
-"port": "${CONFIG_REMOTE_PORT}",
-"id": "${CONFIG_ID}",
-"aid": "${CONFIG_AID}",
-"net": "${CONFIG_NET}",
-"type": "none",
-"host": "${CONFIG_HOST}",
-"path": "${CONFIG_FLOW_PATH}",
-"tls": "${CONFIG_TLS}"
+  "v": "2",
+  "ps": "${CONFIG_PS}",
+  "add": "${CONFIG_ADD}",
+  "port": "${CONFIG_REMOTE_PORT}",
+  "id": "${CONFIG_ID}",
+  "aid": "${CONFIG_AID}",
+  "net": "${CONFIG_NET}",
+  "type": "none",
+  "host": "${CONFIG_HOST}",
+  "path": "${CONFIG_FLOW_PATH}",
+  "tls": "${CONFIG_TLS}"
 }
 EOF
 }
 
 show_info() {
-  make_vmess
+  write_vmess_file
   VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
   VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_FLOW_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
   VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
