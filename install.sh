@@ -540,24 +540,24 @@ get_info_from_vmess() {
 
 show_info() {
   if [[ ! -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
-    red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在 ..."
-  else
-    get_info_from_vmess
-    VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${VMESS_HOST}:${VMESS_PORT}"
-    VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
-    VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
-
-    echo
-    echo "-------------------- 配置信息 --------------------"
-    cat ${VMESS_FILE}
-    echo
-    echo "-------------------- V2Ray vmess URL Base 64 --------------------"
-    cyan ${VMESS_URL_BASE64}
-    echo
-    echo "-------------------- V2Ray vmess URL Text --------------------"
-    green ${VMESS_URL_TEXT}
-    echo
+    red "${V2RAY_CONFIG_PATH}/vmess.json 文件不存在，重新生成 ..."
+    make_vmess
   fi
+  get_info_from_vmess
+  VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${VMESS_HOST}:${VMESS_PORT}"
+  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
+  VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
+
+  echo
+  echo "-------------------- 配置信息 --------------------"
+  cat ${VMESS_FILE}
+  echo
+  echo "-------------------- V2Ray vmess URL Base 64 --------------------"
+  cyan ${VMESS_URL_BASE64}
+  echo
+  echo "-------------------- V2Ray vmess URL Text --------------------"
+  green ${VMESS_URL_TEXT}
+  echo
 }
 
 show_menu() {
