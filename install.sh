@@ -359,23 +359,20 @@ config_protocol() {
     echo
     red "选择协议："
     echo
-    green " 1. vmess"
+    green " 1. vmess (默认选项)"
     echo
     green " 2. vless"
     echo
 
     read -p "$(echo 请选择[1-6]:)" choose
     case $choose in
-    1)
-      PROTOCOL="vmess"
-      break
-      ;;
     2)
       PROTOCOL="vless"
       break
       ;;
-    *)
-      error
+    1 | *)
+      PROTOCOL="vmess"
+      break
       ;;
     esac
   done
@@ -662,6 +659,7 @@ prepare_system() {
 config() {
   if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
     config_domain
+    config_protocol
     write_caddy_config
     write_v2ray_config
     install_services
