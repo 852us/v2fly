@@ -262,7 +262,7 @@ config_domain() {
   done
 }
 
-config_caddy() {
+write_caddy_config() {
   if [[ -d ${CADDY_CONFIG_PATH} ]]; then
     rm -rf ${CADDY_CONFIG_PATH}
   fi
@@ -283,7 +283,7 @@ EOF
   green "Caddy已正确配置 ... "
 }
 
-config_v2ray() {
+write_v2ray_config() {
   if [[ -d ${V2RAY_CONFIG_PATH} ]]; then
     rm -rf ${V2RAY_CONFIG_PATH}
   fi
@@ -342,8 +342,8 @@ EOF
 config() {
   if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
     config_domain
-    config_caddy
-    config_v2ray
+    write_caddy_config
+    write_v2ray_config
     install_services
   fi
 }
@@ -548,7 +548,40 @@ show_info() {
   echo
 }
 
-show_menu() {
+show_config_menu() {
+  while :; do
+    echo
+    red "修改配置信息：${VERSION} "
+    echo
+    green " 1. 修改域名"
+    echo
+    green " 2. 修改协议"
+    echo
+    green " 3. 修改端口"
+    echo
+    green " 4. 修改ID"
+    echo
+    read -p "$(echo 请选择[1-4]:)" choose
+    case $choose in
+    1)
+      get_info_from_vmess
+      config_domain
+      write_caddy_config
+      break ;;
+    2)
+      break  ;;
+    3)
+      break  ;;
+    4)
+      break  ;;
+    *)
+      error  ;;
+    esac
+  done
+  echo
+}
+
+show_main_menu() {
   while :; do
     echo
     red "V2ray一键安装脚本：${VERSION} "
@@ -584,7 +617,7 @@ show_menu() {
       show_info
       break  ;;
     6)
-      reconfig
+      show_config_menu
       break  ;;
     *)
       error  ;;
@@ -628,7 +661,7 @@ main() {
     show_info
     ;;
   m | menu)
-    show_menu
+    show_main_menu
     ;;
   r | restart)
     restart_services
