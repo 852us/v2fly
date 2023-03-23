@@ -633,9 +633,9 @@ show_config_menu() {
     echo
     green " 4. 修改ID"
     echo
-    green " 5. 修改ID"
+    green " 5. 修改伪装域名"
     echo
-    green " 6. 修改ID"
+    green " 6. 修改分流路径"
     echo
     read -p "$(echo 请选择[1-6]:)" choose
     case $choose in
