@@ -128,6 +128,8 @@ set_timezone() {
 
 install_v2fly() {
   V2FLY_URL="https://raw.githubusercontent.com/852us/v2fly/main/install.sh"
+  echo
+  echo "安装v2fly安装脚本 ..."
   curl -s ${V2FLY_URL} > ${V2FLY}
   chmod +x ${V2FLY}
 }
