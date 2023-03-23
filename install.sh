@@ -486,33 +486,56 @@ uninstall() {
 }
 
 make_vmess(){
+  if [[ -f ${CADDY_CONFIG_FILE} ]] && [[ -f ${V2RAY_CONFIG_FILE} ]]; then
+    get_info_from_vmess
+  else
+    VMESS_PS=${DOMAIN}
+    VMESS_ADD=${VMESS_PS}
+    VMESS_HOST=${VMESS_PS}
+    VMESS_PATH=${FLOW_PATH}
+    VMESS_PORT=443
+    VMESS_ID=${UUID}
+    VMESS_AID=0
+    VMESS_NET=${TRANSPORT}
+    VMESS_TLS="tls"
+  fi
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
-"ps": "${DOMAIN}",
-"add": "${DOMAIN}",
-"port": "443",
-"id": "${UUID}",
-"aid": "0",
-"net": "${TRANSPORT}",
+"ps": "${VMESS_PS}",
+"add": "${VMESS_ADD}",
+"port": "${VMESS_PORT}",
+"id": "${VMESS_ID}",
+"aid": "${VMESS_AID}",
+"net": "${VMESS_NET}",
 "type": "none",
-"host": "${DOMAIN}",
-"path": "${FLOW_PATH}",
-"tls": "tls"
+"host": "${VMESS_HOST}",
+"path": "${VMESS_PATH}",
+"tls": "${VMESS_TLS}"
 }
 EOF
 }
 
 get_info_from_vmess() {
-  VMESS_PS=$(awk -F '"' '/"ps"/{print $4}' ${VMESS_FILE})
-  VMESS_ADD=$(awk -F '"' '/"add"/{print $4}' ${VMESS_FILE})
-  VMESS_PORT=$(awk -F '"' '/"port"/{print $4}' ${VMESS_FILE})
-  VMESS_ID=$(awk -F '"' '/"id"/{print $4}' ${VMESS_FILE})
-  VMESS_AID=$(awk -F '"' '/"aid"/{print $4}' ${VMESS_FILE})
-  VMESS_NET=$(awk -F '"' '/"net"/{print $4}' ${VMESS_FILE})
-  VMESS_HOST=$(awk -F '"' '/"host"/{print $4}' ${VMESS_FILE})
-  VMESS_PATH=$(awk -F '"' '/"path"/{print $4}' ${VMESS_FILE})
-  VMESS_TLS=$(awk -F '"' '/"tls"/{print $4}' ${VMESS_FILE})
+#  VMESS_PS=$(awk -F '"' '/"ps"/{print $4}' ${VMESS_FILE})
+#  VMESS_ADD=$(awk -F '"' '/"add"/{print $4}' ${VMESS_FILE})
+#  VMESS_PORT=$(awk -F '"' '/"port"/{print $4}' ${VMESS_FILE})
+#  VMESS_ID=$(awk -F '"' '/"id"/{print $4}' ${VMESS_FILE})
+#  VMESS_AID=$(awk -F '"' '/"aid"/{print $4}' ${VMESS_FILE})
+#  VMESS_NET=$(awk -F '"' '/"net"/{print $4}' ${VMESS_FILE})
+#  VMESS_HOST=$(awk -F '"' '/"host"/{print $4}' ${VMESS_FILE})
+#  VMESS_PATH=$(awk -F '"' '/"path"/{print $4}' ${VMESS_FILE})
+#  VMESS_TLS=$(awk -F '"' '/"tls"/{print $4}' ${VMESS_FILE})
+  VMESS_PS="$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')"
+  VMESS_ADD=${VMESS_PS}
+  VMESS_HOST=${VMESS_PS}
+  VMESS_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+
+  VMESS_PORT="443"
+  VMESS_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"id"/{print $2}')
+  VMESS_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"alterId"/{print $2}')
+  VMESS_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"network"/{print $2}')
+  VMESS_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,]' '/"tls"/{print $1}')
 }
 
 show_info() {
