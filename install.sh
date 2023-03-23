@@ -572,24 +572,24 @@ show_menu() {
     1)
       prepare_system
       install
-      break
+      break ;;
     2)
       install
-      break
+      break  ;;
     3)
       uninstall
-      break
+      break  ;;
     4)
       restart_services
-      break
+      break  ;;
     5)
       show_info
-      break
+      break  ;;
     6)
       reconfig
-      break
+      break  ;;
     *)
-      error
+      error  ;;
     esac
   done
   echo
