@@ -347,6 +347,35 @@ config_domain() {
   done
 }
 
+config_protocol() {
+  get_info_from_config
+  while :; do
+    echo
+    red "选择协议："
+    echo
+    green " 1. vmess"
+    echo
+    green " 2. vless"
+    echo
+
+    read -p "$(echo 请选择[1-6]:)" choose
+    case $choose in
+    1)
+      PROTOCOL="vmess"
+      break
+      ;;
+    2)
+      PROTOCOL="vless"
+      break
+      ;;
+    *)
+      error
+      ;;
+    esac
+  done
+  CONFIG_PROTOCOL=${PROTOCOL}
+}
+
 config_local_port() {
   get_info_from_config
   while :; do
