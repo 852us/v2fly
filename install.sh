@@ -239,6 +239,75 @@ uninstall_v2ray() {
   fi
 }
 
+get_info_from_config() {
+  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
+    return
+  fi
+  CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
+  CONFIG_ADD=${CONFIG_PS}
+  CONFIG_HOST=${CONFIG_PS}
+  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
+
+  CONFIG_REMOTE_PORT="443"
+  CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
+  CONFIG_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
+  CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
+  CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
+  CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"port"/{print $4}')
+  CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
+}
+
+make_vmess() {
+  if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
+    get_info_from_config
+  else
+    CONFIG_PS=${DOMAIN}
+    CONFIG_ADD=${CONFIG_PS}
+    CONFIG_HOST=${CONFIG_PS}
+    CONFIG_PATH=${FLOW_PATH}
+    CONFIG_REMOTE_PORT=443
+    CONFIG_ID=${UUID}
+    CONFIG_AID=0
+    CONFIG_NET=${TRANSPORT}
+    CONFIG_TLS="tls"
+  fi
+  cat >${VMESS_FILE} <<-EOF
+{
+"v": "2",
+"ps": "${CONFIG_PS}",
+"add": "${CONFIG_ADD}",
+"port": "${CONFIG_REMOTE_PORT}",
+"id": "${CONFIG_ID}",
+"aid": "${CONFIG_AID}",
+"net": "${CONFIG_NET}",
+"type": "none",
+"host": "${CONFIG_HOST}",
+"path": "${CONFIG_PATH}",
+"tls": "${CONFIG_TLS}"
+}
+EOF
+}
+
+show_info() {
+  make_vmess
+  VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
+  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
+  VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
+
+  echo
+  echo "-------------------- 配置信息 --------------------"
+  echo "协议: ${CONFIG_PROTOCOL}"
+  echo "本地端口：${CONFIG_LOCAL_PORT}"
+  cat ${VMESS_FILE}
+  echo
+  echo "-------------------- V2Ray vmess URL Base 64 --------------------"
+  cyan ${VMESS_URL_BASE64}
+  echo
+  echo "-------------------- V2Ray vmess URL Text --------------------"
+  green ${VMESS_URL_TEXT}
+  echo
+}
+
 config_domain() {
   get_info_from_config
   while :; do
@@ -507,75 +576,6 @@ uninstall() {
   uninstall_caddy
   uninstall_v2ray
   show_service_status
-}
-
-get_info_from_config() {
-  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
-    return
-  fi
-  CONFIG_PS=$(head -n 1 ${CADDY_CONFIG_FILE} | awk -F ' ' '{print $1}')
-  CONFIG_ADD=${CONFIG_PS}
-  CONFIG_HOST=${CONFIG_PS}
-  CONFIG_PATH="$(awk -F ' ' '/handle_path/{print $2}' ${CADDY_CONFIG_FILE})"
-
-  CONFIG_REMOTE_PORT="443"
-  CONFIG_ID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"id"/{print $5}')
-  CONFIG_AID=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"alterId"/{print $4}')
-  CONFIG_NET=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"network"/{print $5}')
-  CONFIG_TLS=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"tls"/{print $2}')
-  CONFIG_LOCAL_PORT=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"port"/{print $4}')
-  CONFIG_PROTOCOL=$(sed 's/ //g' ${V2RAY_CONFIG_FILE} | awk -F '[:,"]' '/"protocol"/{print $5}' | head -n1)
-}
-
-make_vmess() {
-  if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
-    get_info_from_config
-  else
-    CONFIG_PS=${DOMAIN}
-    CONFIG_ADD=${CONFIG_PS}
-    CONFIG_HOST=${CONFIG_PS}
-    CONFIG_PATH=${FLOW_PATH}
-    CONFIG_REMOTE_PORT=443
-    CONFIG_ID=${UUID}
-    CONFIG_AID=0
-    CONFIG_NET=${TRANSPORT}
-    CONFIG_TLS="tls"
-  fi
-  cat >${VMESS_FILE} <<-EOF
-{
-"v": "2",
-"ps": "${CONFIG_PS}",
-"add": "${CONFIG_ADD}",
-"port": "${CONFIG_REMOTE_PORT}",
-"id": "${CONFIG_ID}",
-"aid": "${CONFIG_AID}",
-"net": "${CONFIG_NET}",
-"type": "none",
-"host": "${CONFIG_HOST}",
-"path": "${CONFIG_PATH}",
-"tls": "${CONFIG_TLS}"
-}
-EOF
-}
-
-show_info() {
-  make_vmess
-  VMESS_URL_TEXT="${CONFIG_PROTOCOL}://${CONFIG_NET}+${CONFIG_TLS}:${CONFIG_ID}-${CONFIG_AID}@${CONFIG_HOST}:${CONFIG_REMOTE_PORT}"
-  VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${CONFIG_HOST}&path=${CONFIG_PATH}&tlsServerName=${CONFIG_ADD}#${CONFIG_PS}"
-  VMESS_URL_BASE64="${CONFIG_PROTOCOL}://$(base64 -w 0 ${VMESS_FILE})"
-
-  echo
-  echo "-------------------- 配置信息 --------------------"
-  echo "协议: ${CONFIG_PROTOCOL}"
-  echo "本地端口：${CONFIG_LOCAL_PORT}"
-  cat ${VMESS_FILE}
-  echo
-  echo "-------------------- V2Ray vmess URL Base 64 --------------------"
-  cyan ${VMESS_URL_BASE64}
-  echo
-  echo "-------------------- V2Ray vmess URL Text --------------------"
-  green ${VMESS_URL_TEXT}
-  echo
 }
 
 reconfig() {
