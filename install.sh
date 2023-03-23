@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="0.0.1"
+VERSION="v0.0.1"
 RED='\e[91m'
 GREEN='\e[92m'
 CYAN='\e[96m'
@@ -551,7 +551,7 @@ show_info() {
 show_config_menu() {
   while :; do
     echo
-    red "修改配置信息：${VERSION} "
+    red "修改配置信息："
     echo
     green " 1. 修改域名"
     echo
