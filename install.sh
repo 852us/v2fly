@@ -506,7 +506,9 @@ get_info_from_config() {
 }
 
 make_vmess(){
+  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
+  else
     CONFIG_PS=${DOMAIN}
     CONFIG_ADD=${CONFIG_PS}
     CONFIG_HOST=${CONFIG_PS}
@@ -516,7 +518,7 @@ make_vmess(){
     CONFIG_AID=0
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
-
+  fi
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
