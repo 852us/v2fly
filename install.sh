@@ -376,7 +376,7 @@ config_id () {
 
 config_fake_doamin () {
   get_info_from_config
-    while :; do
+  while :; do
     echo
     red "请输入新的伪装域名："
     read -p "必须是有效的域名(如：https://www.gnu.org): " FAKE_DOMAIN
@@ -396,6 +396,24 @@ config_fake_doamin () {
   echo
   green "有效域名：${FAKE_DOMAIN} "
   CONFIG_FAKE_DOMAIN=${FAKE_DOMAIN}
+}
+
+config_flow_path () {
+  get_info_from_config
+  while :; do
+    echo
+    red "请输入新的分流路径："
+    read -p "不用输入'/'字符(如：/api 输入 api ): " FLOW_PATH
+    if [ -z "${FLOW_PATH}" ]; then
+      red "输入的伪装域名为空，重来 ..."
+      continue
+    fi
+    FLOW_PATH=$(echo ${FLOW_PATH} | sed 's|/$||g' | sed 's|^/||g')
+    break
+  done
+  echo
+  green "有效的路径名：${FLOW_PATH} "
+  CONFIG_FLOW_PATH=${FLOW_PATH}
 }
 
 write_caddy_config() {
