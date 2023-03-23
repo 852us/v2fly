@@ -565,33 +565,31 @@ show_menu() {
     echo
     green " 5. 查看配置信息"
     echo
-
-    read -p "$(echo 请选择[1-5]:)" choose
+    green " 6. 修改配置信息"
+    echo
+    read -p "$(echo 请选择[1-6]:)" choose
     case $choose in
     1)
       prepare_system
       install
       break
-      ;;
     2)
       install
       break
-      ;;
     3)
       uninstall
       break
-      ;;
     4)
       restart_services
       break
-      ;;
     5)
       show_info
       break
-      ;;
+    6)
+      reconfig
+      break
     *)
       error
-      ;;
     esac
   done
   echo
