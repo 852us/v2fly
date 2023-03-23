@@ -466,15 +466,6 @@ write_v2ray_config() {
 EOF
 }
 
-config() {
-  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
-    config_domain
-    write_caddy_config
-    write_v2ray_config
-    install_services
-  fi
-}
-
 install_caddy_service() {
   echo
   green "Caddy服务安装进行中 ..."
@@ -596,6 +587,15 @@ prepare_system() {
   update_os
   install_packages
   set_timezone
+}
+
+config() {
+  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
+    config_domain
+    write_caddy_config
+    write_v2ray_config
+    install_services
+  fi
 }
 
 install() {
