@@ -544,10 +544,7 @@ get_info_from_vmess() {
 }
 
 show_info() {
-  if [[ ! -f ${V2RAY_CONFIG_PATH}/vmess.json ]]; then
-    make_vmess
-  fi
-  get_info_from_vmess
+  make_vmess
   VMESS_URL_TEXT="vmess://${VMESS_NET}+${VMESS_TLS}:${VMESS_ID}-${VMESS_AID}@${VMESS_HOST}:${VMESS_PORT}"
   VMESS_URL_TEXT="${VMESS_URL_TEXT}/?host=${VMESS_HOST}&path=${VMESS_PATH}&tlsServerName=${VMESS_ADD}#${VMESS_PS}"
   VMESS_URL_BASE64="vmess://$(base64 -w 0 ${VMESS_FILE})"
