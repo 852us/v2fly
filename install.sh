@@ -506,7 +506,7 @@ get_info_from_config() {
 }
 
 make_vmess(){
-  if [[ ! -f ${CADDY_CONFIG_FILE} ]] || [[ ! -f ${V2RAY_CONFIG_FILE} ]]; then
+  if [[ -f ${CADDY_CONFIG_FILE} ]] || [[ -f ${V2RAY_CONFIG_FILE} ]]; then
     get_info_from_config
   else
     CONFIG_PS=${DOMAIN}
