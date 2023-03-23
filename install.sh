@@ -516,7 +516,7 @@ make_vmess(){
     CONFIG_AID=0
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
-  fi
+
   cat >${VMESS_FILE} <<-EOF
 {
 "v": "2",
