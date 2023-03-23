@@ -376,7 +376,7 @@ config_fake_doamin () {
     fi
 
     [ -z $(echo ${FAKE_DOMAIN} | grep http) ] && FAKE_DOMAIN="https://${FAKE_DOMAIN}"
-    FAKE_DOMAIN=$(echo ${FAKE_DOMAIN) | sed 's|/$||') # 去除末尾可能存在的'/'字符，保证Caddy正常运行
+#    FAKE_DOMAIN=$(echo ${FAKE_DOMAIN) | sed 's|/$||') # 去除末尾可能存在的'/'字符，保证Caddy正常运行
     if [ $(curl -s -o /dev/null -w %{http_code} ${FAKE_DOMAIN}) -ne 200 ]; then
       red "输入的端伪装域名无效，重来 ..."
       continue
