@@ -364,7 +364,7 @@ config_protocol() {
     green " 2. vless"
     echo
 
-    read -p "$(echo 请选择[1-6]:)" choose
+    read -p "$(echo 请选择[1-2]:)" choose
     case $choose in
     2)
       PROTOCOL="vless"
