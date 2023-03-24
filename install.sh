@@ -324,6 +324,8 @@ show_info() {
   echo "-------------------- V2Ray Proxy URL --------------------"
   if [ "${CONFIG_PROTOCOL}" = "vmess" ] ; then
     green ${PROXY_URL_BASE64}
+    echo
+    green ${PROXY_URL_TEXT}
   else
     green ${PROXY_URL_TEXT}
   fi
