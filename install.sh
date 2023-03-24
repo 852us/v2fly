@@ -752,7 +752,6 @@ show_config_menu() {
 }
 
 show_version () {
-  echo
   echo "v2fly: ${V2FLY_VERSION}"
   echo
 }
