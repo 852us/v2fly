@@ -32,7 +32,7 @@ PROTOCOL="vmess"
 TRANSPORT="ws" # WebSocket
 UUID=$(uuidgen -r)
 LOCAL_PORT=$(shuf -i60000-65535 -n1)
-PROXY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/vmess.json"
+PROXY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/client.json"
 LOCAL_IP=$(curl -s "https://ifconfig.me")
 
 _exit() {
@@ -286,7 +286,8 @@ write_proxy_config() {
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
   fi
-  cat >${PROXY_CONFIG_FILE} <<-EOF
+  if [ ${CONFIG_PROTOCOL} = "vmess" ] ; then
+    cat >${PROXY_CONFIG_FILE} <<-EOF
 {
   "v": "2",
   "ps": "${CONFIG_PS}",
@@ -301,6 +302,22 @@ write_proxy_config() {
   "tls": "${CONFIG_TLS}"
 }
 EOF
+  else
+    cat >${PROXY_CONFIG_FILE} <<-EOF
+{
+"v": "2",
+"id": "${CONFIG_ID}",
+"add": "${CONFIG_ADD}",
+"port": "${CONFIG_REMOTE_PORT}",
+"encryption": "none",
+"security": "${CONFIG_TLS}"
+"type": "${CONFIG_NET}",
+"host": "${CONFIG_HOST}",
+"path": "${CONFIG_FLOW_PATH}",
+"ps": "${CONFIG_PS}",
+}
+EOF
+  fi
 }
 
 show_info() {
@@ -328,6 +345,8 @@ show_info() {
     green ${PROXY_URL_TEXT}
   else
     green ${PROXY_URL_TEXT}
+    echo
+    cyan ${PROXY_URL_BASE64}
   fi
   echo
 }
