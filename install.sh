@@ -286,7 +286,7 @@ write_proxy_config() {
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
   fi
-  
+
   if [ ${CONFIG_PROTOCOL} = "vmess" ] ; then
     cat >${PROXY_CONFIG_FILE} <<-EOF
 {
