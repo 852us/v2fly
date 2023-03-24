@@ -286,6 +286,7 @@ write_proxy_config() {
     CONFIG_NET=${TRANSPORT}
     CONFIG_TLS="tls"
   fi
+  
   if [ ${CONFIG_PROTOCOL} = "vmess" ] ; then
     cat >${PROXY_CONFIG_FILE} <<-EOF
 {
@@ -300,21 +301,6 @@ write_proxy_config() {
   "host": "${CONFIG_HOST}",
   "path": "${CONFIG_FLOW_PATH}",
   "tls": "${CONFIG_TLS}"
-}
-EOF
-  else
-    cat >${PROXY_CONFIG_FILE} <<-EOF
-{
-"v": "2",
-"id": "${CONFIG_ID}",
-"add": "${CONFIG_ADD}",
-"port": "${CONFIG_REMOTE_PORT}",
-"encryption": "none",
-"security": "${CONFIG_TLS}"
-"type": "${CONFIG_NET}",
-"host": "${CONFIG_HOST}",
-"path": "${CONFIG_FLOW_PATH}",
-"ps": "${CONFIG_PS}",
 }
 EOF
   fi
@@ -345,8 +331,6 @@ show_info() {
     green ${PROXY_URL_TEXT}
   else
     green ${PROXY_URL_TEXT}
-    echo
-    cyan ${PROXY_URL_BASE64}
   fi
   echo
 }
