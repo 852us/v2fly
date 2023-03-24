@@ -12,7 +12,7 @@ V2RAY_BIT=""
 CADDY_ARCH=""
 PACKAGES="curl git wget unzip"
 V2FLY_PATH="/usr/local/bin/v2fly"
-V2FLY="/usr/bin/v2fly"
+V2FLY="/usr/local/sbin/v2fly"
 V2RAY="/usr/local/bin/v2ray"
 CADDY="/usr/local/bin/caddy"
 CADDY_CONFIG_PATH="/etc/caddy"
@@ -751,6 +751,11 @@ show_config_menu() {
   echo
 }
 
+show_version () {
+  echo
+  echo "v2fly: ${V2FLY_VERSION}"
+  echo
+}
 show_main_menu() {
   while :; do
     echo
@@ -808,6 +813,8 @@ show_help() {
 
   $0 c | config: 配置V2Ray与Caddy
 
+  $0 h | help: 显示本帮助信息
+
   $0 i | install: 安装 V2Ray与Caddy
 
   $0 I | install_all: 更新操作系统、安装必要模块、安装 V2Ray与Caddy
@@ -820,8 +827,8 @@ show_help() {
 
   $0 u | uninstall: 卸载 V2Ray
 
-  $0 h | help: 显示本帮助信息
-  "
+  $0 v | version: 显示版本信息
+"
 }
 
 main() {
@@ -853,6 +860,9 @@ main() {
     ;;
   u | uninstall)
     uninstall
+    ;;
+  v | version)
+    show_version
     ;;
   h | help | *)
     show_help $0
