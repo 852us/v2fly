@@ -208,7 +208,7 @@ install_v2ray() {
 rm_files() {
   for f in $@; do
     if [[ -f $f ]]; then
-      echo rm -f $f
+      echo "Removed the file $f ..."
       rm -f $f
     fi
   done
@@ -217,7 +217,7 @@ rm_files() {
 rm_dirs() {
   for d in $@; do
     if [[ -d $d ]]; then
-      echo rm -rf $d
+      echo "Removed the directory $f ..."
       rm -rf $d
     fi
   done
@@ -247,6 +247,10 @@ uninstall_v2ray() {
     rm_dirs ${V2FLY_PATH} ${V2RAY_CONFIG_PATH} ${V2RAY_LOG_PATH}
     red "已卸载V2Ray "
   fi
+}
+
+uninstall_v2fly() {
+  rm_files ${V2FLY}
 }
 
 get_info_from_config() {
@@ -679,6 +683,7 @@ install() {
 uninstall() {
   uninstall_caddy
   uninstall_v2ray
+  uninstall_v2fly
   show_service_status
 }
 
