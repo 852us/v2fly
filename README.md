@@ -8,5 +8,5 @@
 ## 脚本使用命令
 
 ```bash
-bash <(curl -sL https://raw.githubusercontent.com/852us/v2fly/main/install.sh?v)
+bash <(curl -sL https://raw.githubusercontent.com/852us/v2fly/main/install.sh?v=$RANDOM)
 ```
