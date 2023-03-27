@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v0.1.0"
+VERSION="v0.1.1"
 RED='\e[91m'
 GREEN='\e[92m'
 CYAN='\e[96m'
@@ -648,14 +648,22 @@ show_service_status() {
   echo
 }
 
-restart_services() {
+start_services() {
+  green "启动 V2Ray 与 Caddy 服务"
+  systemctl start caddy v2ray
+  show_service_status
+}
+
+stop_services() {
   echo
   red "停止Caddy与V2Ray服务"
   systemctl stop caddy v2ray
   show_service_status
-  green "启动Caddy与V2Ray服务"
-  systemctl start caddy v2ray
-  show_service_status
+}
+
+restart_services() {
+  stop_services
+  start_services
 }
 
 prepare_system() {
@@ -822,7 +830,13 @@ show_help() {
 
   $0 m | menu: 管理 V2Ray (同等于直接输入 $0)
 
-  $0 r | restart: 重启 V2Ray与Caddy服务
+  $0 r | restart: 重启 V2Ray 与 Caddy 服务
+
+  $0 s | start: 启动 Caddy 与 V2Ray 服务
+
+  $0 S | stop: 停止 V2Ray 与 Caddy 服务
+
+  $0 st | status: 显示 V2Ray 与 Caddy 服务的状态
 
   $0 u | uninstall: 卸载 V2Ray
 
@@ -854,7 +868,13 @@ main() {
   r | restart)
     restart_services
     ;;
-  s | status)
+  s | start)
+    start_services
+    ;;
+  S | stop)
+    stop_services
+    ;;
+  s5 | status)
     show_service_status
     ;;
   u | uninstall)
