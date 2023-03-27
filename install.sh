@@ -874,7 +874,7 @@ main() {
   S | stop)
     stop_services
     ;;
-  s5 | status)
+  st | status)
     show_service_status
     ;;
   u | uninstall)
