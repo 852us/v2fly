@@ -22,7 +22,7 @@ V2RAY_CONFIG_PATH="/etc/v2ray"
 V2RAY_CONFIG_FILE="${V2RAY_CONFIG_PATH}/config.json"
 V2RAY_LOG_PATH="/var/log/v2ray"
 V2RAY_SERVICE_FILE="/lib/systemd/system/v2ray.service"
-V2FLY_VERSION="$(awk -F '[="]' '/^VERSION/{print $3}' ${V2FLY})"
+V2FLY_VERSION="$(test -f ${V2FLY} && awk -F '[="]' '/^VERSION/{print $3}' ${V2FLY})"
 
 MAGIC_URL="852us.com"
 DOMAIN="852us.com"
